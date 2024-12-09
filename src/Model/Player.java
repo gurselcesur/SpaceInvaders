@@ -10,8 +10,7 @@ public class Player {
     private int speed;     // Movement speed
 
     // Constructor
-    public Player(String name, int startX, int startY) {
-        this.name = name;
+    public Player(int startX, int startY) {
         this.health = 100;   // Default health
         this.score = 0;      // Initial score
         this.positionX = startX;
@@ -62,11 +61,11 @@ public class Player {
 
     // Methods
     public void moveLeft() {
-        this.positionX -= speed;
+
     }
 
     public void moveRight() {
-        this.positionX += speed;
+
     }
 
     public void shoot() {
