@@ -12,6 +12,9 @@ public class GameLauncher {
         GameRenderer renderer = new GameRenderer(model);
         GameController controller = new GameController(model, renderer, soundManager);
 
+
+
+
         controller.startGameLoop();
     }
 }
