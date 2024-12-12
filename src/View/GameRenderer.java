@@ -1,7 +1,5 @@
 package View;
-
 import Model.GameState;
-
 import javax.swing.*;
 import java.awt.*;
 
