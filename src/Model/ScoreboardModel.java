@@ -1,35 +1,104 @@
 package Model;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ScoreboardModel {
-    private List<String> highscores;
+    private List<ScoreEntry> highscores;
+    private static final String SCOREBOARD_FILE = "/Users/gurselcesur/Documents/GitHub/SpaceInvaders/resources /scoreboard.txt";
 
     public ScoreboardModel() {
-        // Initialize with dummy data (replace with actual implementation)
         highscores = new ArrayList<>();
-        highscores.add("Player1 - 5000");
-        highscores.add("Player2 - 4000");
-        highscores.add("Player3 - 3000");
-        highscores.add("Player4 - 2000");
-        highscores.add("Player5 - 1000");
+        loadHighscoresFromFile();
+    }
+
+    /**
+     * Load high scores from the file at initialization.
+     */
+    private void loadHighscoresFromFile() {
+        File file = new File(SCOREBOARD_FILE);
+        if (!file.exists()) {
+            return; // If file does not exist
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("-", 2);
+                if (parts.length == 2) {
+                    String playerName = parts[0].trim();
+                    int score = Integer.parseInt(parts[1].trim());
+                    highscores.add(new ScoreEntry(playerName, score));
+                }
+            }
+            sortHighscores(); // List the uploaded scores
+        } catch (IOException e) {
+            System.err.println("Failed to load scores from file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Add a new high score and save the updated highscores to the file in sorted order.
+     * @param playerName Name of the player.
+     * @param score Score to add.
+     */
+    public void addHighscore(String playerName, int score) {
+        highscores.add(new ScoreEntry(playerName, score));
+        sortHighscores(); // sort the scores from high to low
+        saveHighscoresToFile(); // save updated scores to file
+    }
+
+    /**
+     * Save sorted high scores to the scoreboard file.
+     */
+    private void saveHighscoresToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SCOREBOARD_FILE))) {
+            for (ScoreEntry entry : highscores) {
+                writer.write(entry.getPlayerName() + ", " + entry.getScore());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to save scores to file: " + e.getMessage());
+        }
     }
 
     /**
      * Get the list of high scores.
-     * @return List of high scores.
+     * @return List of high score strings.
      */
     public List<String> getHighscores() {
-        return new ArrayList<>(highscores); // Return a copy to protect encapsulation
+        List<String> highscoreStrings = new ArrayList<>();
+        for (ScoreEntry entry : highscores) {
+            highscoreStrings.add(entry.getPlayerName() + " - " + entry.getScore());
+        }
+        return highscoreStrings;
+    }
+
+    // Private method to sort the highscores from highest to lowest
+    private void sortHighscores() {
+        highscores.sort(Comparator.comparingInt(ScoreEntry::getScore).reversed());
     }
 
     /**
-     * Add a new high score.
-     * @param score The high score to add.
+     * Inner class to hold score entries.
      */
-    public void addHighscore(String score) {
-        highscores.add(score);
-        // Optionally sort or limit the size of the list
+    private static class ScoreEntry {
+        private final String playerName;
+        private final int score;
+
+        public ScoreEntry(String playerName, int score) {
+            this.playerName = playerName;
+            this.score = score;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
+
+        public int getScore() {
+            return score;
+        }
     }
 }

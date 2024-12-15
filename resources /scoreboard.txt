@@ -1,0 +1,4 @@
+Alice - 4000
+Bob - 3000
+Charlie - 2000
+John Pork - 7000
