@@ -18,6 +18,7 @@ public class InputHandler implements KeyListener {
             case KeyEvent.VK_SPACE -> controller.getGameState().getPlayer().shoot();
             case KeyEvent.VK_ESCAPE -> controller.stopGame();
         }*/
+        case KeyEvent.VK_RIGHT -> controller.getGameState().getPlayer().moveRight();
     }
 
     @Override
