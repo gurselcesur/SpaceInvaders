@@ -16,6 +16,7 @@ public class GameRenderer extends JFrame {
         setLocation(x, y);
         setResizable(false);
         setLayout(null);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Display username
