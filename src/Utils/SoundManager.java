@@ -43,6 +43,9 @@ public class SoundManager implements LineListener {
             e.printStackTrace();
         }
     }
+    public SoundManager() {
+
+    }
 
     // This method is triggered when a line event occurs (e.g., playback stop)
     @Override

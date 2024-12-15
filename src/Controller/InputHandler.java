@@ -12,12 +12,12 @@ public class InputHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
+        /*switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT -> controller.getGameState().getPlayer().moveLeft();
             case KeyEvent.VK_RIGHT -> controller.getGameState().getPlayer().moveRight();
             case KeyEvent.VK_SPACE -> controller.getGameState().getPlayer().shoot();
             case KeyEvent.VK_ESCAPE -> controller.stopGame();
-        }
+        }*/
     }
 
     @Override
