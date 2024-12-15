@@ -28,5 +28,8 @@ public class GameController {
     private void pauseGame() {
         System.out.println("Game paused for user: " + username);
         // Transition to a Pause screen (to be implemented)
+
+        // Placeholder for now
+
     }
 }

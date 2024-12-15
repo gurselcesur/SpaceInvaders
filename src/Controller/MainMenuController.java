@@ -62,4 +62,5 @@ public class MainMenuController {
         new ScoreboardController(new ScoreboardView(highscores), scoreboardModel);
         mainMenu.dispose(); // Close the Main Menu window
     }
+
 }
