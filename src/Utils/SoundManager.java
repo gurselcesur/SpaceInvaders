@@ -11,12 +11,12 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
 // This class manages audio playback using Java's Sound API
-public class Sound implements LineListener {
+public class SoundManager implements LineListener {
 
     private Clip soundClip; // The audio clip to be played
 
     // Constructor to initialize and load a sound clip from a given file path
-    public Sound(String path) {
+    public SoundManager(String path) {
         try {
             // Locate the audio file using the given path
             URL url = getClass().getResource(path);
@@ -42,6 +42,9 @@ public class Sound implements LineListener {
             // Print the stack trace in case of any exceptions
             e.printStackTrace();
         }
+    }
+    public SoundManager() {
+
     }
 
     // This method is triggered when a line event occurs (e.g., playback stop)
