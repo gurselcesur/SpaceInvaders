@@ -1,10 +1,13 @@
 package View;
 
+import Controller.InputHandler;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameRenderer extends JFrame {
     private JButton pauseButton; // Button to pause the game
+
 
     public GameRenderer(String username) {
         // Frame setup

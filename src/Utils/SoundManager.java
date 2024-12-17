@@ -36,7 +36,6 @@ public class SoundManager {
     public void playSound(){
         soundClip.start();
     }
-
     public void loopSound(){
         soundClip.loop(Clip.LOOP_CONTINUOUSLY);
     }

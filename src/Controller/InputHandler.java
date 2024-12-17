@@ -10,20 +10,43 @@ public class InputHandler implements KeyListener {
         this.controller = controller;
     }
 
+
+    public boolean leftPressed, rightPressed, spacePressed;
+
     @Override
     public void keyPressed(KeyEvent e) {
-        /*switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> controller.getGameState().getPlayer().moveLeft();
-            case KeyEvent.VK_RIGHT -> controller.getGameState().getPlayer().moveRight();
-            case KeyEvent.VK_SPACE -> controller.getGameState().getPlayer().shoot();
-            case KeyEvent.VK_ESCAPE -> controller.stopGame();
-        }*/
-        case KeyEvent.VK_RIGHT -> controller.getGameState().getPlayer().moveRight();
+
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_LEFT) {
+         leftPressed = true;
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
+        }
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
+        }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
+        }
+
+        if (code == KeyEvent.VK_SPACE) {
+            spacePressed = true;
+        }
+    }
+
+
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+
+    }
 }

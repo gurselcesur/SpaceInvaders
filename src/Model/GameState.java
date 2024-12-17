@@ -12,7 +12,7 @@ public class GameState {
     private int score;
 
     public GameState() {
-        player = new Player(400, 550);
+        player = new Player();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         isGameOver = false;
