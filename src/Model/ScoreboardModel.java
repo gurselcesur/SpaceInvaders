@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ScoreboardModel {
     private List<ScoreEntry> highscores;
-    private static final String SCOREBOARD_FILE = "/Users/gurselcesur/Documents/GitHub/SpaceInvaders/resources /scoreboard.txt";
+    private static final String SCOREBOARD_FILE = "resources/scoreboard.txt";
 
     public ScoreboardModel() {
         highscores = new ArrayList<>();
