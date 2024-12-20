@@ -4,15 +4,17 @@ import Controller.InputHandler;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+import java.io.FileInputStream;
 
 /**
  * Class representing the player's entity in the game
  * It handles loading the player sprite, updating its position,
  * and rendering it on the screen.
  */
+
 public class Player extends EntityBase {
     // Player's attributes
+    private String username;
     private int health;          // Current health of the player
     private int score;           // Player's score
     private int speed;           // Movement speed of the player
@@ -23,15 +25,16 @@ public class Player extends EntityBase {
     private BufferedImage[] leftSprites = new BufferedImage[5];
     private BufferedImage[] rightSprites = new BufferedImage[5];
 
-    private InputHandler inputH; // Handles player input
+
     private int spriteCounter = 0; // Counter for animating sprites
     private int spriteNum = 1;     // Current sprite frame number
+    private InputHandler inputH;
 
     // Constructor: Initializes the player and its attributes
-    public Player(int x, int y, int width, int height, InputHandler inputH) {
-        super(x, y, width, height); // Call to the parent class constructor
+    public Player(String username,InputHandler inputH) {
+        super(400, 450); // Call to the parent class constructor
+        this.username = username;
         this.inputH = inputH;
-
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
     }
@@ -48,9 +51,11 @@ public class Player extends EntityBase {
     private void loadSprites() {
         try {
             for (int i = 0; i < 5; i++) {
-                defaultSprites[i] = ImageIO.read(getClass().getResourceAsStream("resources/img/space ship/default/default" + (i + 1) + ".png"));
-                leftSprites[i] = ImageIO.read(getClass().getResourceAsStream("resources/img/space ship/left/left" + (i + 1) + ".png"));
-                rightSprites[i] = ImageIO.read(getClass().getResourceAsStream("resources/img/space ship/right/right" + (i + 1) + ".png"));
+                String path = System.getProperty("user.dir") + "/resources/img/space_ship/default/default" + (i + 1) + ".png";
+                defaultSprites[i] = ImageIO.read(new FileInputStream(path));
+                // defaultSprites[i] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("resources/img/space_ship/default/default" + (i + 1) + ".png")));
+                // leftSprites[i] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("resources/img/space_ship/left/left" + (i + 1) + ".png")));
+                // rightSprites[i] = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("resources/img/space_ship/right/right" + (i + 1) + ".png")));
             }
         } catch (Exception e) {
             e.printStackTrace(); // Handles exceptions during sprite loading
@@ -82,7 +87,7 @@ public class Player extends EntityBase {
     // Draws the player on the screen based on its current state
     @Override
     public void draw(Graphics2D g2) {
-        BufferedImage currentImage = null;
+        BufferedImage currentImage;
 
         // Select the appropriate sprite based on the player's direction
         switch (direction) {
@@ -93,7 +98,7 @@ public class Player extends EntityBase {
 
         // Draw the current sprite on the screen
         if (currentImage != null) {
-            g2.drawImage(currentImage, x, y, width, height, null);
+            g2.drawImage(currentImage, x, y, null);
         }
     }
 

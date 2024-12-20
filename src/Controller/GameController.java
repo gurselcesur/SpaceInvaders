@@ -1,7 +1,9 @@
 package Controller;
 
+import Model.GameState;
 import Model.ScoreboardModel;
 import View.GameRenderer;
+import View.GameView;
 import View.MainMenu;
 import View.PauseScreen;
 
@@ -11,16 +13,16 @@ import java.awt.event.ActionListener;
 
 public class GameController {
     private GameRenderer gameRenderer;
+    private GameView gameView;
     private String username;
-    private boolean paused = false;
+    private boolean isPaused = false;
 
-
-    public GameController(GameRenderer gameRenderer, String username) {
+    public GameController(GameState gameState, GameRenderer gameRenderer, GameView gameView, String username) {
         this.gameRenderer = gameRenderer;
         this.username = username;
 
         // Attach action listener to Pause button
-        gameRenderer.getPauseButton().addActionListener(new ActionListener() {
+        gameView.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pauseGame();
@@ -32,7 +34,7 @@ public class GameController {
      * Handle the Pause button click event.
      */
     public void pauseGame() {
-        paused = true;
+        isPaused = true;
         SwingUtilities.invokeLater(() -> {
             PauseScreen pauseScreen = new PauseScreen();
             pauseScreen.getResumeButton().addActionListener(e -> {
@@ -42,7 +44,7 @@ public class GameController {
 
             pauseScreen.getMainMenuButton().addActionListener(e -> {
                 pauseScreen.dispose();
-                gameRenderer.dispose();
+                //gameRenderer.dispose();
                 new MainMenuController(new MainMenu(), new ScoreboardModel());
             });
             pauseScreen.getExitButton().addActionListener(e -> System.exit(0));
@@ -70,10 +72,9 @@ public class GameController {
 //        }
         //*********************************************************
 
-
     }
 
     public void resumeGame() {
-        paused = false;
+        isPaused = false;
     }
 }

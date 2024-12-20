@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.InputHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +13,8 @@ public class GameState {
     private boolean isGameOver;
     private int score;
 
-    public GameState() {
-        //player = new Player();
+    public GameState(String username, InputHandler inputHandler) {
+        player = new Player(username, inputHandler);
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         isGameOver = false;
@@ -34,6 +36,9 @@ public class GameState {
 
     public Player getPlayer() {
         return player;
+    }
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public List<Enemy> getEnemies() {

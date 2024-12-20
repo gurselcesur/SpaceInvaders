@@ -6,6 +6,4 @@ public interface Entity {
     void draw(Graphics2D g2);
     int getX();
     int getY();
-    int getWidth();
-    int getHeight();
 }

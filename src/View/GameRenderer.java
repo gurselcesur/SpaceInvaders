@@ -1,51 +1,37 @@
 package View;
 
 import Controller.InputHandler;
+import Model.GameState;
+import Model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class GameRenderer extends JFrame {
-    private JButton pauseButton; // Button to pause the game
 
+public class GameRenderer extends JPanel {
+    private GameState gameState; // Reference to the game state
+    private InputHandler inputHandler; // Input handler for player controls
+    private Player player;
 
-    public GameRenderer(String username) {
-        // Frame setup
-        setTitle("Space Invaders - Game Screen");
-        setSize(800, 600);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - getWidth()) / 2;
-        int y = (screenSize.height - getHeight()) / 2;
-        setLocation(x, y);
-        setResizable(false);
-        setLayout(null);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Display username
-        JLabel usernameLabel = new JLabel("Player: " + username);
-        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        usernameLabel.setBounds(10, 10, 200, 30);
-        add(usernameLabel);
-
-        // Add Pause button
-        pauseButton = new JButton("Pause");
-        pauseButton.setFont(new Font("Arial", Font.BOLD, 16));
-        pauseButton.setBounds(650, 10, 100, 40);
-        add(pauseButton);
-
-        // Placeholder for game canvas (to be implemented later)
-        JLabel gamePlaceholder = new JLabel("Game Screen Placeholder");
-        gamePlaceholder.setFont(new Font("Arial", Font.PLAIN, 24));
-        gamePlaceholder.setHorizontalAlignment(SwingConstants.CENTER);
-        gamePlaceholder.setBounds(100, 100, 600, 400);
-        add(gamePlaceholder);
-
-        // Make the frame visible
-        setVisible(true);
+    public GameRenderer(GameState gameState, InputHandler inputHandler) {
+        this.gameState = gameState;
+        this.inputHandler = inputHandler;
+        this.player = gameState.getPlayer(); // Initialize player after gameState is assigned
+        System.out.println("GameRenderer object created");
     }
 
-    public JButton getPauseButton() {
-        return pauseButton;
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Use Graphics2D for advanced rendering
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Draw the game background
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // Draw the player
+        player.draw(g2);
     }
 }

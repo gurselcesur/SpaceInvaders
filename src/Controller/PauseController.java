@@ -1,5 +1,6 @@
 package Controller;
 
+import View.GameView;
 import View.PauseScreen;
 import View.GameRenderer;
 
@@ -10,14 +11,15 @@ public class PauseController {
     private PauseScreen pauseScreen;
     private GameRenderer gameRenderer;
     private GameController gameController;
+    private GameView gameView;
 
     public PauseController(PauseScreen pauseScreen, GameRenderer gameRenderer, GameController gameController){
         this.pauseScreen = pauseScreen;
         this.gameRenderer = gameRenderer;
         this.gameController = gameController;
+        this.gameView = gameView;
 
-
-        gameRenderer.getPauseButton().addActionListener(new ActionListener() {
+        gameView.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gameController.pauseGame();

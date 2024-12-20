@@ -16,8 +16,8 @@ public class Enemy extends EntityBase {
     private BufferedImage sprite; // The image used to represent the enemy
 
     // Constructor initializes the enemy's position, size, and movement speed
-    public Enemy(int x, int y, int width, int height, int speed) {
-        super(x, y, width, height); // Call the parent class constructor to initialize position and size
+    public Enemy(int x, int y, int speed) {
+        super(x, y); // Call the parent class constructor to initialize position and size
         this.speed = speed;         // Set the speed of the enemy
 
         loadSprite(); // Load the image for the enemy sprite
@@ -45,7 +45,7 @@ public class Enemy extends EntityBase {
         // Check if the sprite is loaded successfully
         if (sprite != null) {
             // Draw the sprite at the enemy's current position with its specified size
-            g2.drawImage(sprite, x, y, width, height, null);
+            g2.drawImage(sprite, x, y, null);
         }
     }
 }

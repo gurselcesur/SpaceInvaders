@@ -1,7 +1,9 @@
 package Controller;
 
+import Model.GameState;
 import Model.ScoreboardModel;
 import View.GameRenderer;
+import View.GameView;
 import View.MainMenu;
 import View.ScoreboardView;
 
@@ -12,6 +14,7 @@ import java.awt.event.ActionListener;
 public class MainMenuController {
     private MainMenu mainMenu;
     private ScoreboardModel scoreboardModel; // Reference to the ScoreboardModel
+    private GameState gameState;
 
     public MainMenuController(MainMenu mainMenu, ScoreboardModel scoreboardModel) {
         this.mainMenu = mainMenu;
@@ -45,9 +48,13 @@ public class MainMenuController {
             return;
         }
 
-        // Transition to GameRenderer and GameController
+        // Create game objects
+        InputHandler inputHandler = new InputHandler();
+        gameState = new GameState(username, inputHandler); // Model
         System.out.println("Starting game for user: " + username);
-        new GameController(new GameRenderer(username), username);
+        GameRenderer gameRenderer = new GameRenderer(gameState,inputHandler); // View
+        GameView gameView = new GameView(username, gameState, gameRenderer); // View
+        new GameController(gameState, gameRenderer, gameView, username); // Controller
         mainMenu.dispose(); // Close the Main Menu window
     }
 
