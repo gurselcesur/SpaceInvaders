@@ -56,7 +56,7 @@ public class ScoreboardModel {
     private void saveHighscoresToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SCOREBOARD_FILE))) {
             for (ScoreEntry entry : highscores) {
-                writer.write(entry.getPlayerName() + ", " + entry.getScore());
+                writer.write(entry.getPlayerName() + " - " + entry.getScore());
                 writer.newLine();
             }
         } catch (IOException e) {
