@@ -74,7 +74,7 @@ public class GameView extends JFrame {
             // Retrieve the volume control after opening the clip
             if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                 volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
-                volumeControl.setValue((int)mainMenu.getVolumeControl().getValue());
+                volumeControl.setValue(mainMenu.getVolumeLevel());
             }
 
             backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously

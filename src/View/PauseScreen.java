@@ -29,12 +29,15 @@ public class PauseScreen extends JFrame {
         styleButton(exitButton);
         pausePanel.add(exitButton);
 
+
         add(pausePanel);
         setTitle("Game Paused");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Prevent closing directly
         setLocationRelativeTo(null);
         setResizable(false);
+
+
     }
 
     public JButton getResumeButton() {

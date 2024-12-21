@@ -16,6 +16,8 @@ public class MainMenu extends JFrame {
     private Clip backgroundMusicClip;// Clip for background music
     private JButton lowerSoundButton;
     private JButton higherSoundButton;
+
+    private float volumeLevel;
     private FloatControl volumeControl; // Control for adjusting volume
 
 
@@ -101,6 +103,9 @@ public class MainMenu extends JFrame {
         this.volumeControl = volumeControl;
     }
 
+    public float getVolumeLevel() {
+        return volumeLevel;
+    }
 
     // Method to play background music
     private void playBackgroundMusic(String filePath) {
@@ -113,7 +118,7 @@ public class MainMenu extends JFrame {
             // Retrieve the volume control after opening the clip
             if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                 volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
-                volumeControl.setValue(-20);
+                volumeControl.setValue(volumeLevel);
             }
 
             backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously
@@ -127,10 +132,12 @@ public class MainMenu extends JFrame {
     // Adjust volume
     public void increaseVolume() {
         if (volumeControl != null) {
-            float newVolume = volumeControl.getValue() + 10.0f; // Increase by 2 decibels
-            volumeControl.setValue(Math.min(newVolume, volumeControl.getMaximum()));
-            System.out.println(newVolume);
-            System.out.println("Volume increased to: " + newVolume);
+            volumeLevel = volumeLevel+ 10.0f; // Increase by 2 decibels
+            volumeLevel = Math.min(volumeLevel, volumeControl.getMaximum());
+
+            volumeControl.setValue(Math.min(volumeLevel, volumeControl.getMaximum()));
+            System.out.println(volumeLevel);
+            System.out.println("Volume increased to: " + volumeLevel);
         }else{
             System.out.println("Volume control is not initialized.");
         }
@@ -138,10 +145,12 @@ public class MainMenu extends JFrame {
 
     public void decreaseVolume() {
         if (volumeControl != null) {
-            float newVolume = volumeControl.getValue() - 10.0f; // Decrease by 2 decibels
-            volumeControl.setValue(Math.max(newVolume, volumeControl.getMinimum()));
-            System.out.println(newVolume);
-            System.out.println("Volume decreased to: " + newVolume);
+            volumeLevel = volumeLevel - 10.0f; // Decrease by 2 decibels
+            volumeLevel = Math.max(volumeLevel, volumeControl.getMinimum());
+
+            volumeControl.setValue(Math.max(volumeLevel, volumeControl.getMinimum()));
+            System.out.println(volumeLevel);
+            System.out.println("Volume decreased to: " + volumeLevel);
         }else{
             System.out.println("Volume control is not initialized.");
         }

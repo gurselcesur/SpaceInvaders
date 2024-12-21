@@ -60,6 +60,8 @@ public class GameController {
         SwingUtilities.invokeLater(() -> {
             PauseScreen pauseScreen = new PauseScreen();
 
+            gameView.getPauseButton().setEnabled(false);
+
             // Resume the game when Resume button is clicked
             pauseScreen.getResumeButton().addActionListener(e -> {
                 pauseScreen.dispose();
@@ -73,6 +75,7 @@ public class GameController {
                 pauseScreen.dispose();
                 gameView.dispose();
                 new MainMenuController(new MainMenu(), new ScoreboardModel());
+                gameView.getPauseButton().setEnabled(true);
             });
 
             // Exit the game when Exit button is clicked
@@ -85,6 +88,7 @@ public class GameController {
      * Resume the game by closing the pause screen and continuing the game loop.
      */
     private void resumeGame() {
+        gameView.getPauseButton().setEnabled(true);
         isPaused = false;
     }
 }
