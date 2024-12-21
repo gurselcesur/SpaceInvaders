@@ -118,8 +118,8 @@ public class Player extends EntityBase {
 
         // Draw the current sprite on the screen
         if (currentImage != null) {
-            int scaledWidth = currentImage.getWidth() * 2;
-            int scaledHeight = currentImage.getHeight() * 2;
+            int scaledWidth = currentImage.getWidth() * 3;
+            int scaledHeight = currentImage.getHeight() * 3;
             g2.drawImage(currentImage, x, y, scaledWidth, scaledHeight, null);
         } else {
             // Debugging: Log missing sprite
@@ -146,7 +146,7 @@ public class Player extends EntityBase {
 
     // Shoot a bullet
     public Bullet shootBullet() {
-        int bulletX = x + 32 / 2 - 2; // Center bullet on the player
+        int bulletX = x + 48 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
         return new Bullet(bulletX, bulletY, 10, true); // Player bullet with speed 10
 

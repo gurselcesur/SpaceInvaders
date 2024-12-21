@@ -70,7 +70,11 @@ public class Enemy extends EntityBase {
         if (isAlive) {
             if (sprite != null) {
                 // Draw the sprite if available
+                int scaledWidth = sprite.getWidth() * 2;
+                int scaledHeight = sprite.getHeight() * 2;
                 g2.drawImage(sprite, x, y, null);
+                g2.drawImage(sprite, x, y, scaledWidth, scaledHeight, null);
+
             } else {
                 // Fallback: Draw a red rectangle if sprite is missing
                 g2.setColor(Color.RED);
