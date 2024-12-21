@@ -1,6 +1,8 @@
 package Model;
 
 import Controller.InputHandler;
+import Utils.SoundManager;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,15 +29,18 @@ public class Player extends EntityBase {
     private int spriteCounter = 0; // Counter for animating sprites
     private int spriteNum = 1;     // Current sprite frame number
     private InputHandler inputH;   // Reference to the input handler
+    private SoundManager soundManager;
 
     // Constructor: Initializes the player and its attributes
     public Player(String username, InputHandler inputH) {
-        super(400, 450); // Call to the parent class constructor
+        super(300, 300); // Call to the parent class constructor
         this.username = username;
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
-
+        x = 384;
+        y = 450;
+        soundManager = SoundManager.getInstance();
         // Debugging: Confirm player initialization
         System.out.println("Player initialized at position (" + x + ", " + y + ")");
     }
@@ -148,8 +153,8 @@ public class Player extends EntityBase {
     public Bullet shootBullet() {
         int bulletX = x + 48 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
-        return new Bullet(bulletX, bulletY, 10, true); // Player bullet with speed 10
-
+        soundManager.playShootSound();
+        return new Bullet(bulletX, bulletY, 10, 10, true); // Player bullet with speed 10
     }
 
 }

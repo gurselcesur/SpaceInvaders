@@ -15,6 +15,9 @@ public abstract class EntityBase implements Entity {
         this.height = height;    // Height of the entity
     }
 
+    public EntityBase(int x, int y) {
+    }
+
     // Getter method for the X-coordinate of the entity
     @Override
     public int getX() {

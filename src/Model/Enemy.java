@@ -1,5 +1,7 @@
 package Model;
 
+import Utils.SoundManager;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,14 +19,18 @@ public class Enemy extends EntityBase {
     private BufferedImage sprite; // Sprite image for the enemy
     private boolean isAlive;      // Whether the enemy is alive
     private int health;           // Health of the enemy (optional for future damage handling)
+    private int scaledWidth;
+    private int scaledHeight;
+    private SoundManager soundManager;
 
     // Constructor initializes the enemy's position, speed, and health
-    public Enemy(int x, int y, int speed) {
-        super(x, y);              // Initialize position
+    public Enemy(int x, int y, int width, int height, int speed) {
+        super(x, y, width, height);
         this.speed = speed;       // Set movement speed
         this.isAlive = true;      // Set enemy as alive by default
         this.health = 1;          // Default health (can be customized)
         loadSprite();             // Load the enemy sprite
+        soundManager = SoundManager.getInstance();
     }
 
     /**
@@ -70,8 +76,8 @@ public class Enemy extends EntityBase {
         if (isAlive) {
             if (sprite != null) {
                 // Draw the sprite if available
-                int scaledWidth = sprite.getWidth() * 2;
-                int scaledHeight = sprite.getHeight() * 2;
+                scaledWidth = sprite.getWidth() * 2;
+                scaledHeight = sprite.getHeight() * 2;
                 g2.drawImage(sprite, x, y, null);
                 g2.drawImage(sprite, x, y, scaledWidth, scaledHeight, null);
 
@@ -92,6 +98,7 @@ public class Enemy extends EntityBase {
         if (health <= 0) {
             isAlive = false; // Mark the enemy as dead
             System.out.println("Enemy destroyed at position (" + x + ", " + y + ")");
+            soundManager.enemyHitSound();
         } else {
             System.out.println("Enemy took damage. Remaining health: " + health);
         }
