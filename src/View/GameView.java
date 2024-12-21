@@ -56,6 +56,9 @@ public class GameView extends JFrame {
         // Ensure GameRenderer gains focus
         SwingUtilities.invokeLater(gameRenderer::requestFocusInWindow);
 
+        // Play background music
+        playBackgroundMusic("resources/sound/Unorganic Asteroid Beat.wav");
+
         // Make the frame visible
         setVisible(true);
     }
@@ -71,6 +74,7 @@ public class GameView extends JFrame {
             // Retrieve the volume control after opening the clip
             if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
                 volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
+                volumeControl.setValue((int)mainMenu.getVolumeControl().getValue());
             }
 
             backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously
@@ -79,6 +83,16 @@ public class GameView extends JFrame {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
+    }
+
+    // Stop music when the application closes
+    @Override
+    public void dispose() {
+        if (backgroundMusicClip != null && backgroundMusicClip.isRunning()) {
+            backgroundMusicClip.stop();
+            backgroundMusicClip.close();
+        }
+        super.dispose();
     }
 
     public JButton getPauseButton() {

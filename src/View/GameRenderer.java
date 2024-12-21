@@ -2,6 +2,8 @@ package View;
 
 import Controller.InputHandler;
 import Model.*;
+
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -10,6 +12,7 @@ public class GameRenderer extends JPanel {
     private GameState gameState; // Reference to the game state
     private InputHandler inputHandler; // Input handler for player controls
     private Player player;
+    private FloatControl volumeControl; // Control for adjusting volume
 
     public GameRenderer(GameState gameState, InputHandler inputHandler) {
         this.gameState = gameState;

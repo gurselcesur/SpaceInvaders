@@ -83,24 +83,24 @@ public class MainMenu extends JFrame {
     public JButton getLowerSoundButton() {
         return lowerSoundButton;
     }
-
     public void setLowerSoundButton(JButton lowerSoundButton) {
         this.lowerSoundButton = lowerSoundButton;
     }
+
     public JButton getHigherSoundButton() {
         return higherSoundButton;
     }
-
     public void setHigherSoundButton(JButton higherSoundButton) {
         this.higherSoundButton = higherSoundButton;
     }
+
     public FloatControl getVolumeControl() {
         return volumeControl;
     }
-
     public void setVolumeControl(FloatControl volumeControl) {
         this.volumeControl = volumeControl;
     }
+
 
     // Method to play background music
     private void playBackgroundMusic(String filePath) {
