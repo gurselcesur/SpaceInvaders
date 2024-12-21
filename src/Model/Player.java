@@ -84,37 +84,22 @@ public class Player extends EntityBase {
     // Updates the player's position and animations
     @Override
     public void update() {
-        // Debugging: Show input states
-        // System.out.println("Left pressed: " + inputH.leftPressed + ", Right pressed: " + inputH.rightPressed);
-
-        // Update player direction and position based on input
         if (inputH.leftPressed) {
             direction = "left";
-            x -= speed; // Move left
-            if (x < 0) x = 0; // Prevent moving off the left edge
+            x -= speed;
+            if (x < 0) x = 0; // Prevent moving out of bounds on the left
         } else if (inputH.rightPressed) {
             direction = "right";
-            x += speed; // Move right
-            if (x > 760) x = 760; // Prevent moving off the right edge (assuming player width = 40)
+            x += speed;
+            if (x > 760) x = 760; // Prevent moving out of bounds on the right
         } else {
-            direction = "default"; // No direction (idle)
+            direction = "default"; // No movement, set direction to "default"
         }
 
-        // Handle shooting
-        if (inputH.shootPressed) {
-            shootBullet(); // Create a bullet
-        }
-        // Debugging: Log player's position and direction
-        // System.out.println("Player position updated to (" + x + ", " + y + ") with direction: " + direction);
-
-        // Handle sprite animation
         spriteCounter++;
-        if (spriteCounter > 5) { // Change sprite every 5 updates
-            spriteNum = (spriteNum % 5) + 1; // Loop through sprites (1-5)
+        if (spriteCounter > 5) {
+            spriteNum = (spriteNum % 5) + 1; // Loop sprite frames between 1-5
             spriteCounter = 0;
-
-            // Debugging: Log sprite animation
-            // System.out.println("Sprite updated to frame: " + spriteNum);
         }
     }
 
@@ -122,6 +107,7 @@ public class Player extends EntityBase {
     @Override
     public void draw(Graphics2D g2) {
         BufferedImage currentImage = null;
+
 
         // Select the appropriate sprite based on the player's direction
         switch (direction) {
@@ -132,7 +118,9 @@ public class Player extends EntityBase {
 
         // Draw the current sprite on the screen
         if (currentImage != null) {
-            g2.drawImage(currentImage, x, y, null);
+            int scaledWidth = currentImage.getWidth() * 2;
+            int scaledHeight = currentImage.getHeight() * 2;
+            g2.drawImage(currentImage, x, y, scaledWidth, scaledHeight, null);
         } else {
             // Debugging: Log missing sprite
             System.out.println("No sprite available for direction: " + direction);
@@ -158,9 +146,10 @@ public class Player extends EntityBase {
 
     // Shoot a bullet
     public Bullet shootBullet() {
-        int bulletX = x + /*width*/40 / 2 - 2; // Center bullet on the player
+        int bulletX = x + 32 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
         return new Bullet(bulletX, bulletY, 10, true); // Player bullet with speed 10
+
     }
 
 }

@@ -1,6 +1,7 @@
 package View;
 
 import Model.GameState;
+import Utils.SoundManager;
 import com.sun.tools.javac.Main;
 
 import javax.sound.sampled.*;
