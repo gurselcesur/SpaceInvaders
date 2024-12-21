@@ -30,7 +30,7 @@ public class Player extends EntityBase {
 
     // Constructor: Initializes the player and its attributes
     public Player(String username, InputHandler inputH) {
-        super(400, 450); // Call to the parent class constructor
+        super(400, 450, 64, 64); // Pass default width and height (e.g., 64x64 pixels)
         this.username = username;
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
@@ -147,9 +147,10 @@ public class Player extends EntityBase {
     // Shoot a bullet
     public Bullet shootBullet() {
         int bulletX = x + 32 / 2 - 2; // Center bullet on the player
-        int bulletY = y - 10; // Start just above the player
-        return new Bullet(bulletX, bulletY, 10, true); // Player bullet with speed 10
-
+        int bulletY = y - 10;         // Start just above the player
+        int bulletWidth = 4;          // Width of the bullet
+        int bulletHeight = 10;        // Height of the bullet
+        return new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, true); // Pass all required arguments
     }
 
 }

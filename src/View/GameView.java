@@ -23,7 +23,7 @@ public class GameView extends JFrame {
         this.gameState = gameState;
         this.gameRenderer = gameRenderer;
         this.mainMenu = mainMenu;
-        this.volumeControl = mainMenu.getVolumeControl();
+
 
         // Frame setup
         setTitle("Space Invaders");

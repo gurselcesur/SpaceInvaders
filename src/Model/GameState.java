@@ -38,7 +38,7 @@ public class GameState {
             for (int col = 0; col < cols; col++) {
                 int x = 50 + col * (enemyWidth + spacingX);
                 int y = 50 + row * (enemyHeight + spacingY);
-                enemies.add(new Enemy(x, y, 2/*, enemyWidth, enemyHeight*/)); // Add enemy
+                enemies.add(new Enemy(x, y, enemyWidth, enemyHeight, 2)); // Pass all required arguments
             }
         }
         System.out.println("Enemies initialized: " + enemies.size());
@@ -70,6 +70,7 @@ public class GameState {
         checkGameOver();
     }
 
+
     /**
      * Updates the bullets' positions and handles their interactions.
      */
@@ -88,15 +89,11 @@ public class GameState {
             // Check for collisions with enemies
             if (bullet.isPlayerBullet()) {
                 handleBulletEnemyCollisions(bulletIterator, bullet);
-            } else {
-               // // Check for collisions with the player
-               // if (bullet.collidesWith(player)) {
-               //     player.takeDamage(10); // Example damage
-               //     bulletIterator.remove();
-               // }
             }
         }
     }
+
+
 
     /**
      * Handles collisions between player bullets and enemies.
@@ -104,16 +101,20 @@ public class GameState {
     private void handleBulletEnemyCollisions(Iterator<Bullet> bulletIterator, Bullet bullet) {
         for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
             Enemy enemy = enemyIterator.next();
-            // if (enemy.isAlive() && bullet.collidesWith(enemy)) {
-            //     enemy.takeDamage(); // Reduce enemy health
-            //     bulletIterator.remove();
-            //     score += 10; // Increment score for destroying an enemy
-            //     System.out.println("Enemy destroyed! Score: " + score);
-            //     break;
-            // }
+            if (enemy.isAlive() && bullet.collidesWith(enemy)) {
+                enemy.takeDamage(); // Reduce enemy health
+                bulletIterator.remove(); // Remove the bullet
+                score += 10; // Increment score for destroying an enemy
+
+                if (!enemy.isAlive()) {
+                    enemyIterator.remove();
+                    System.out.println("Enemy destroyed at position (" + enemy.getX() + ", " + enemy.getY() + ")");
+                    System.out.println("Enemy destroyed! Score: " + score);
+                }
+                break; // Exit after handling collision
+            }
         }
     }
-
     /**
      * Updates enemies' positions and interactions.
      */
@@ -121,13 +122,6 @@ public class GameState {
         for (Enemy enemy : enemies) {
             if (enemy.isAlive()) {
                 enemy.update();
-
-                // Check if the enemy reaches the player's position
-               // if (enemy.collidesWith(player)) {
-               //     player.takeDamage(20); // Example damage for collision
-               //     enemy.takeDamage();   // Mark enemy as dead
-               //     System.out.println("Player hit by enemy!");
-               // }
             }
         }
     }
