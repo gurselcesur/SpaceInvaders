@@ -2,10 +2,12 @@ package Controller;
 
 import Model.GameState;
 import Model.ScoreboardModel;
+import Utils.SoundManager;
 import View.GameRenderer;
 import View.GameView;
 import View.MainMenu;
 import View.ScoreboardView;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +49,8 @@ public class MainMenuController {
                 raiseSound();
             }
         });
+
+
     }
 
     /**
@@ -65,9 +69,10 @@ public class MainMenuController {
         InputHandler inputHandler = new InputHandler();
         gameState = new GameState(username, inputHandler); // Model
         System.out.println("Starting game for user: " + username);
-        GameRenderer gameRenderer = new GameRenderer(gameState,inputHandler); // View
+        GameRenderer gameRenderer = new GameRenderer(gameState, inputHandler); // View
         GameView gameView = new GameView(username, gameState, gameRenderer, mainMenu); // View
         new GameController(gameState, gameRenderer, gameView, username); // Controller
+
         mainMenu.dispose(); // Close the Main Menu window
     }
 
@@ -75,6 +80,8 @@ public class MainMenuController {
      * Handle the Show Scoreboard button click event.
      */
     private void showScoreboard() {
+        // Stop background music before showing the scoreboard
+        mainMenu.getSoundManager().stopBackgroundMusic();
         // Fetch highscores from the model
         java.util.List<String> highscores = scoreboardModel.getHighscores();
 
@@ -83,13 +90,13 @@ public class MainMenuController {
         mainMenu.dispose(); // Close the Main Menu window
     }
 
-    //Handle the Lower Sound button click event.
+    // Handle the Lower Sound button click event.
     private void lowerSound() {
-        mainMenu.decreaseVolume(); // Decrease volume via MainMenu method
+        mainMenu.getSoundManager().decreaseVolume();
     }
 
     // Handle the Higher Sound button click event.
     private void raiseSound() {
-        mainMenu.increaseVolume(); // Increase volume via MainMenu method
+        mainMenu.getSoundManager().increaseVolume();
     }
 }

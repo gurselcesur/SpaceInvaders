@@ -1,6 +1,8 @@
 package Model;
 
 import Controller.InputHandler;
+import Utils.SoundManager;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.awt.*;
@@ -30,6 +32,7 @@ public class Player extends EntityBase {
     private int spriteCounter = 0; // Counter for animating sprites
     private int spriteNum = 1;     // Current sprite frame number
     private InputHandler inputH;   // Reference to the input handler
+    private SoundManager soundManager;
 
     // Constructor: Initializes the player and its attributes
     public Player(String username, InputHandler inputH) {
@@ -38,6 +41,8 @@ public class Player extends EntityBase {
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
+
+        soundManager = SoundManager.getInstance();
 
         // Debugging: Confirm player initialization
         System.out.println("Player initialized at position (" + x + ", " + y + ")");
@@ -154,23 +159,12 @@ public class Player extends EntityBase {
         int bulletWidth = 4;          // Width of the bullet
         int bulletHeight = 10;        // Height of the bullet
 
-        playShootSound();
+        soundManager.playShootSound();
 
         return new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, true); // Pass all required arguments
     }
 
 
-    private void playShootSound() {
-        try {
-            // Load the sound file
-            File soundFile = new File("resources/sound/PlayerShoot.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start(); // Play the sound
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }

@@ -2,28 +2,22 @@ package View;
 
 import Model.GameState;
 import Utils.SoundManager;
-import com.sun.tools.javac.Main;
 
-import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 public class GameView extends JFrame {
     private JButton pauseButton; // Button to pause the game
     private GameState gameState; // Reference to the game state
     private GameRenderer gameRenderer; // The game renderer
-    private Clip backgroundMusicClip;// Clip for background music
-    private MainMenu mainMenu;
-    private FloatControl volumeControl; // Control for adjusting volume
-
+    private MainMenu mainMenu; // Reference to MainMenu
+    private SoundManager soundManager; // SoundManager instance for audio management
 
     public GameView(String username, GameState gameState, GameRenderer gameRenderer, MainMenu mainMenu) {
         this.gameState = gameState;
         this.gameRenderer = gameRenderer;
         this.mainMenu = mainMenu;
-
+        soundManager = SoundManager.getInstance();
 
         // Frame setup
         setTitle("Space Invaders");
@@ -56,32 +50,17 @@ public class GameView extends JFrame {
         // Ensure GameRenderer gains focus
         SwingUtilities.invokeLater(gameRenderer::requestFocusInWindow);
 
+        soundManager.playBackgroundMusic("resources/sound/Unorganic Asteroid Beat.wav");
         // Make the frame visible
         setVisible(true);
     }
 
-    // Method to play background music
-    private void playBackgroundMusic(String filePath) {
-        try {
-            File musicFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
-            backgroundMusicClip = AudioSystem.getClip();
-            backgroundMusicClip.open(audioStream);
-
-            // Retrieve the volume control after opening the clip
-            if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
-            }
-
-            backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously
-            backgroundMusicClip.start();
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
     public JButton getPauseButton() {
         return pauseButton;
+    }
+
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }
