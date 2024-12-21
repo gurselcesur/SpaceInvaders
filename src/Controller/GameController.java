@@ -66,6 +66,8 @@ public class GameController {
                 resumeGame();
             });
 
+
+
             // Return to Main Menu when Main Menu button is clicked
             pauseScreen.getMainMenuButton().addActionListener(e -> {
                 pauseScreen.dispose();

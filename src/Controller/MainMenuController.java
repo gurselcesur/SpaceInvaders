@@ -33,6 +33,20 @@ public class MainMenuController {
                 showScoreboard();
             }
         });
+
+        mainMenu.getLowerSoundButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lowerSound();
+            }
+        });
+
+        mainMenu.getHigherSoundButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                raiseSound();
+            }
+        });
     }
 
     /**
@@ -52,7 +66,7 @@ public class MainMenuController {
         gameState = new GameState(username, inputHandler); // Model
         System.out.println("Starting game for user: " + username);
         GameRenderer gameRenderer = new GameRenderer(gameState,inputHandler); // View
-        GameView gameView = new GameView(username, gameState, gameRenderer); // View
+        GameView gameView = new GameView(username, gameState, gameRenderer, mainMenu); // View
         new GameController(gameState, gameRenderer, gameView, username); // Controller
         mainMenu.dispose(); // Close the Main Menu window
     }
@@ -67,5 +81,15 @@ public class MainMenuController {
         // Transition to ScoreboardView with ScoreboardController
         new ScoreboardController(new ScoreboardView(highscores), scoreboardModel);
         mainMenu.dispose(); // Close the Main Menu window
+    }
+
+    //Handle the Lower Sound button click event.
+    private void lowerSound() {
+        mainMenu.decreaseVolume(); // Decrease volume via MainMenu method
+    }
+
+    // Handle the Higher Sound button click event.
+    private void raiseSound() {
+        mainMenu.increaseVolume(); // Increase volume via MainMenu method
     }
 }
