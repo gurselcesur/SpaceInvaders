@@ -22,7 +22,7 @@ public class PauseController {
         gameView.getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.pauseGame();
+                //gameController.pauseGame();
             }
         });
     }

@@ -14,10 +14,19 @@ public class GameRenderer extends JPanel {
     private Player player;
 
     public GameRenderer(GameState gameState, InputHandler inputHandler) {
+        System.out.println("GameRenderer object created");
+
         this.gameState = gameState;
         this.inputHandler = inputHandler;
         this.player = gameState.getPlayer(); // Initialize player after gameState is assigned
-        System.out.println("GameRenderer object created");
+
+        gameState.setPlayer(player);
+
+        // Add key listener to capture inputs
+        // Enable keyboard focus
+        setFocusable(true);
+        requestFocusInWindow();
+        addKeyListener(inputHandler);
     }
 
     @Override
@@ -33,5 +42,11 @@ public class GameRenderer extends JPanel {
 
         // Draw the player
         player.draw(g2);
+    }
+
+    public void updateGame() {
+        player.update(); // Update the player's position
+        repaint(); // Refresh the view
+        System.out.println("GameRenderer repainted");
     }
 }

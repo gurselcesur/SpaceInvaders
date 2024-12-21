@@ -42,6 +42,8 @@ public class GameView extends JFrame {
 
         // Add GameRenderer as the central game panel
         add(gameRenderer, BorderLayout.CENTER);
+        // Ensure GameRenderer gains focus
+        SwingUtilities.invokeLater(gameRenderer::requestFocusInWindow);
 
         // Make the frame visible
         setVisible(true);

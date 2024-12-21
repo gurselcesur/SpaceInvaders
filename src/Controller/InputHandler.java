@@ -9,17 +9,21 @@ public class InputHandler extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> leftPressed = true; // Left arrow key
-            case KeyEvent.VK_RIGHT -> rightPressed = true; // Right arrow key
+        System.out.println("Key Pressed: " + e.getKeyCode());
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            leftPressed = true;
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> leftPressed = false;
-            case KeyEvent.VK_RIGHT -> rightPressed = false;
+        System.out.println("Key Released: " + e.getKeyCode());
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
         }
     }
 }

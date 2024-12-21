@@ -8,73 +8,86 @@ import View.MainMenu;
 import View.PauseScreen;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GameController {
-    private GameRenderer gameRenderer;
-    private GameView gameView;
-    private String username;
+    private final GameRenderer gameRenderer;
+    private final GameView gameView;
+    private final GameState gameState;
+    private final String username;
     private boolean isPaused = false;
 
     public GameController(GameState gameState, GameRenderer gameRenderer, GameView gameView, String username) {
+        this.gameState = gameState;
         this.gameRenderer = gameRenderer;
+        this.gameView = gameView;
         this.username = username;
 
         // Attach action listener to Pause button
-        gameView.getPauseButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pauseGame();
+        gameView.getPauseButton().addActionListener(e -> pauseGame());
+
+        // Start the game loop
+        startGameLoop();
+    }
+
+    /**
+     * Starts the game loop, which continuously updates the game and refreshes the view.
+     */
+    private void startGameLoop() {
+        System.out.println("Starting game loop for user: " + username);
+        new Thread(() -> {
+            while (!gameState.isGameOver()) {
+                if (!isPaused) {
+                    // Update the game state
+                    gameState.update();
+
+                    // Refresh the game view
+                    SwingUtilities.invokeLater(gameRenderer::repaint);
+                }
+                try {
+                    Thread.sleep(16); // Limit frame rate (~60 FPS)
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        });
+            // Handle game-over logic here if needed
+            System.out.println("Game Over!");
+        }).start();
     }
 
     /**
      * Handle the Pause button click event.
      */
-    public void pauseGame() {
+    private void pauseGame() {
         isPaused = true;
+
+        // Display the pause screen
         SwingUtilities.invokeLater(() -> {
             PauseScreen pauseScreen = new PauseScreen();
+
+            // Resume the game when Resume button is clicked
             pauseScreen.getResumeButton().addActionListener(e -> {
                 pauseScreen.dispose();
                 resumeGame();
             });
 
+            // Return to Main Menu when Main Menu button is clicked
             pauseScreen.getMainMenuButton().addActionListener(e -> {
                 pauseScreen.dispose();
-                //gameRenderer.dispose();
+                gameView.dispose();
                 new MainMenuController(new MainMenu(), new ScoreboardModel());
             });
+
+            // Exit the game when Exit button is clicked
             pauseScreen.getExitButton().addActionListener(e -> System.exit(0));
+
             pauseScreen.setVisible(true);
-
         });
-
-        // Bu kodu sonra oyun koduna eklememiz gerekecek:
-        //*********************************************************
-//        private boolean paused = false;
-//
-//        public void gameLoop() {
-//            while (true) {
-//                if (!paused) {
-//                    // Update game state
-//                    updateGameLogic();
-//                    renderGame();
-//                }
-//                try {
-//                    Thread.sleep(16); // Limit frame rate (~60 FPS)
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-        //*********************************************************
-
     }
 
-    public void resumeGame() {
+    /**
+     * Resume the game by closing the pause screen and continuing the game loop.
+     */
+    private void resumeGame() {
         isPaused = false;
     }
 }
