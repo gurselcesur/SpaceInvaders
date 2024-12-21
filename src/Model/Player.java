@@ -2,9 +2,12 @@ package Model;
 
 import Controller.InputHandler;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Class representing the player's entity in the game
@@ -150,7 +153,24 @@ public class Player extends EntityBase {
         int bulletY = y - 10;         // Start just above the player
         int bulletWidth = 4;          // Width of the bullet
         int bulletHeight = 10;        // Height of the bullet
+
+        playShootSound();
+
         return new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, true); // Pass all required arguments
+    }
+
+
+    private void playShootSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/PlayerShoot.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
 }
