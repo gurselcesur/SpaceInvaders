@@ -32,4 +32,6 @@ public abstract class EntityBase implements Entity {
     // Abstract method: Renders the entity using the given Graphics2D context
     @Override
     public abstract void draw(Graphics2D g2);
+
+
 }

@@ -37,7 +37,7 @@ public class GameRenderer extends JPanel {
         drawPlayer(g2);
 
         // Draw bullets
-        // drawBullets(g2);
+        drawBullets(g2);
 
         // Draw enemies
         drawEnemies(g2);
@@ -60,13 +60,13 @@ public class GameRenderer extends JPanel {
 
     /**
      * Draws all bullets in the game.
-
+     */
     private void drawBullets(Graphics2D g2) {
         List<Bullet> bullets = gameState.getBullets();
         for (Bullet bullet : bullets) {
             bullet.draw(g2);
         }
-    }*/
+    }
 
     /**
      * Draws all enemies in the game.

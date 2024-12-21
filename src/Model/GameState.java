@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GameState {
-    private Player player;                // Player instance
+    private Player player;               // Player instance
     private List<Enemy> enemies;         // List of enemies
     private List<Bullet> bullets;        // List of bullets
     private boolean isGameOver;          // Flag for game-over state
     private int score;                   // Player's score
+    private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
+    private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
 
     public GameState(String username, InputHandler inputHandler) {
         player = new Player(username, inputHandler);
@@ -22,48 +24,62 @@ public class GameState {
     }
 
     /**
-     * Initialize enemies at the start of the game.
+     * Initializes enemies at the start of the game.
      */
     private void initializeEnemies() {
-        for (int i = 0; i < 2; i++) { // 2 rows of enemies
-            for (int j = 0; j < 2; j++) { // 2 enemies per row
-                int x = 50 + j * 60; // Horizontal spacing
-                int y = 50 + i * 40; // Vertical spacing
-                enemies.add(new Enemy(x, y, 2)); // Add enemy with speed
+        int enemyWidth = 40;  // Example width of each enemy
+        int enemyHeight = 30; // Example height of each enemy
+        int rows = 2;         // Number of rows of enemies
+        int cols = 2;         // Number of enemies per row
+        int spacingX = 20;    // Horizontal spacing
+        int spacingY = 15;    // Vertical spacing
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int x = 50 + col * (enemyWidth + spacingX);
+                int y = 50 + row * (enemyHeight + spacingY);
+                enemies.add(new Enemy(x, y, 2/*, enemyWidth, enemyHeight*/)); // Add enemy
             }
         }
         System.out.println("Enemies initialized: " + enemies.size());
     }
 
     /**
-     * Update game logic, including player, enemies, and bullets.
+     * Updates the game state, including player, bullets, and enemies.
      */
     public void update() {
         if (isGameOver) return;
 
-        // Update player
+        // Update player actions
         player.update();
 
-        // Update bullets
-        // updateBullets();
+        // Handle shooting with cooldown
+        long currentTime = System.currentTimeMillis();
+        if (player.getInputHandler().shootPressed && currentTime - lastBulletTime >= BULLET_COOLDOWN) {
+            bullets.add(player.shootBullet());
+            lastBulletTime = currentTime; // Update the last bullet time
+        }
 
-        // Update enemies
+        // Update bullets and handle collisions
+        updateBullets();
+
+        // Update enemies and their behavior
         updateEnemies();
 
-        // Check for game-over conditions
+        // Check if the game is over
         checkGameOver();
     }
 
     /**
-     * Update bullets' positions and handle collisions.
-
+     * Updates the bullets' positions and handles their interactions.
+     */
     private void updateBullets() {
         Iterator<Bullet> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
             bullet.update();
 
-            // Remove bullets that go out of bounds
+            // Remove bullets that are out of bounds
             if (bullet.isOutOfBounds()) {
                 bulletIterator.remove();
                 continue;
@@ -71,27 +87,35 @@ public class GameState {
 
             // Check for collisions with enemies
             if (bullet.isPlayerBullet()) {
-                for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
-                    Enemy enemy = enemyIterator.next();
-                    if (enemy.isAlive() && bullet.collidesWith(enemy)) {
-                        enemy.takeDamage(); // Kill the enemy
-                        bulletIterator.remove();
-                        score += 10; // Increment score for destroying an enemy
-                        break;
-                    }
-                }
+                handleBulletEnemyCollisions(bulletIterator, bullet);
             } else {
-                // Check for collision with the player
-                if (bullet.collidesWith(player)) {
-                    player.takeDamage(10); // Example damage amount
-                    bulletIterator.remove();
-                }
+               // // Check for collisions with the player
+               // if (bullet.collidesWith(player)) {
+               //     player.takeDamage(10); // Example damage
+               //     bulletIterator.remove();
+               // }
             }
         }
-    }*/
+    }
 
     /**
-     * Update enemies' positions and actions.
+     * Handles collisions between player bullets and enemies.
+     */
+    private void handleBulletEnemyCollisions(Iterator<Bullet> bulletIterator, Bullet bullet) {
+        for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
+            Enemy enemy = enemyIterator.next();
+            // if (enemy.isAlive() && bullet.collidesWith(enemy)) {
+            //     enemy.takeDamage(); // Reduce enemy health
+            //     bulletIterator.remove();
+            //     score += 10; // Increment score for destroying an enemy
+            //     System.out.println("Enemy destroyed! Score: " + score);
+            //     break;
+            // }
+        }
+    }
+
+    /**
+     * Updates enemies' positions and interactions.
      */
     private void updateEnemies() {
         for (Enemy enemy : enemies) {
@@ -99,23 +123,24 @@ public class GameState {
                 enemy.update();
 
                 // Check if the enemy reaches the player's position
-                // if (enemy.collidesWith(player)) {
-                //     player.takeDamage(20); // Example damage for collision
-                //     enemy.takeDamage();   // Remove the enemy
-                // }
+               // if (enemy.collidesWith(player)) {
+               //     player.takeDamage(20); // Example damage for collision
+               //     enemy.takeDamage();   // Mark enemy as dead
+               //     System.out.println("Player hit by enemy!");
+               // }
             }
         }
     }
 
     /**
-     * Check for game-over conditions.
+     * Checks for game-over conditions.
      */
     private void checkGameOver() {
         if (player.getHealth() <= 0) {
-            isGameOver = true; // Player lost
+            isGameOver = true;
             System.out.println("Game Over! Player health reached 0.");
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
-            isGameOver = true; // All enemies destroyed
+            isGameOver = true;
             System.out.println("Game Over! You win!");
         }
     }

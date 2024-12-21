@@ -4,26 +4,27 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class InputHandler extends KeyAdapter {
-    public boolean leftPressed = false;  // Track if the left arrow is pressed
-    public boolean rightPressed = false; // Track if the right arrow is pressed
+    public boolean leftPressed = false;  // Track left arrow key
+    public boolean rightPressed = false; // Track right arrow key
+    public boolean shootPressed = false; // Track spacebar key
 
     @Override
     public void keyPressed(KeyEvent e) {
         // System.out.println("Key Pressed: " + e.getKeyCode());
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            leftPressed = true;
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            rightPressed = true;
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT -> leftPressed = true;
+            case KeyEvent.VK_RIGHT -> rightPressed = true;
+            case KeyEvent.VK_SPACE -> shootPressed = true;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // System.out.println("Key Released: " + e.getKeyCode());
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            leftPressed = false;
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            rightPressed = false;
+        // System.out.println("Key Pressed: " + e.getKeyCode());
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_LEFT -> leftPressed = false;
+            case KeyEvent.VK_RIGHT -> rightPressed = false;
+            case KeyEvent.VK_SPACE -> shootPressed = false;
         }
     }
 }

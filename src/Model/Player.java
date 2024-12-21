@@ -49,6 +49,10 @@ public class Player extends EntityBase {
         return score;
     }
 
+    public InputHandler getInputHandler() {
+        return inputH;
+    }
+
     // Sets the default values for the player's attributes
     private void setDefaultValues() {
         this.health = 100;       // Default health
@@ -96,6 +100,10 @@ public class Player extends EntityBase {
             direction = "default"; // No direction (idle)
         }
 
+        // Handle shooting
+        if (inputH.shootPressed) {
+            shootBullet(); // Create a bullet
+        }
         // Debugging: Log player's position and direction
         // System.out.println("Player position updated to (" + x + ", " + y + ") with direction: " + direction);
 
@@ -147,4 +155,12 @@ public class Player extends EntityBase {
         // Debugging: Log score increase
         System.out.println("Player score increased by " + points + ", Total score: " + score);
     }
+
+    // Shoot a bullet
+    public Bullet shootBullet() {
+        int bulletX = x + /*width*/40 / 2 - 2; // Center bullet on the player
+        int bulletY = y - 10; // Start just above the player
+        return new Bullet(bulletX, bulletY, 10, true); // Player bullet with speed 10
+    }
+
 }
