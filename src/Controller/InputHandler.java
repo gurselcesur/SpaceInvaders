@@ -9,7 +9,7 @@ public class InputHandler extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("Key Pressed: " + e.getKeyCode());
+        // System.out.println("Key Pressed: " + e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             leftPressed = true;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -19,7 +19,7 @@ public class InputHandler extends KeyAdapter {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("Key Released: " + e.getKeyCode());
+        // System.out.println("Key Released: " + e.getKeyCode());
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             leftPressed = false;
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {

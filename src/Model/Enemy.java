@@ -3,49 +3,106 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * The Enemy class represents an enemy entity in the game.
  * It handles loading the enemy sprite, updating its position,
  * and rendering it on the screen.
  */
-
 public class Enemy extends EntityBase {
-    private int speed;        // The speed at which the enemy moves
-    private BufferedImage sprite; // The image used to represent the enemy
+    // Attributes
+    private int speed;            // Speed of the enemy's horizontal movement
+    private BufferedImage sprite; // Sprite image for the enemy
+    private boolean isAlive;      // Whether the enemy is alive
+    private int health;           // Health of the enemy (optional for future damage handling)
 
-    // Constructor initializes the enemy's position, size, and movement speed
+    // Constructor initializes the enemy's position, speed, and health
     public Enemy(int x, int y, int speed) {
-        super(x, y); // Call the parent class constructor to initialize position and size
-        this.speed = speed;         // Set the speed of the enemy
-
-        loadSprite(); // Load the image for the enemy sprite
+        super(x, y);              // Initialize position
+        this.speed = speed;       // Set movement speed
+        this.isAlive = true;      // Set enemy as alive by default
+        this.health = 1;          // Default health (can be customized)
+        loadSprite();             // Load the enemy sprite
     }
 
-    // Method to load the enemy sprite from resources
+    /**
+     * Loads the sprite for the enemy from the resources directory.
+     */
     private void loadSprite() {
         try {
-            // Load the sprite image from the resources folder
-            sprite = ImageIO.read(getClass().getResourceAsStream("resources/img/alien.png"));
+            // Update the path to correctly locate the alien image
+            String alienImagePath = System.getProperty("user.dir") + "/resources/img/alien.png";
+            sprite = ImageIO.read(new File(alienImagePath));
+            // System.out.println("Loaded sprite for enemy: " + alienImagePath);
         } catch (Exception e) {
-            e.printStackTrace(); // If loading fails, print the stack trace for debugging
+            e.printStackTrace();
+            System.out.println("Failed to load enemy sprite.");
         }
     }
 
-    // Update the enemy's position based on its speed
-    @Override
+    /**
+     * Updates the enemy's position and movement behavior.
+     */
     public void update() {
-        y += speed; // Move the enemy downward by its speed value
+        if (!isAlive) return; // Skip updating if the enemy is dead
+
+        // Horizontal movement
+        x += speed;
+
+        // Change direction and move down when hitting screen edges
+        if (x <= 0 || x >= 760) { // Assuming a screen width of 800px
+            speed = -speed;
+            y += 20; // Move down by 20px when changing direction
+        }
+
+        // Debugging: Log position updates
+        // System.out.println("Enemy updated: (" + x + ", " + y + "), Speed: " + speed);
     }
 
-    // Draw the enemy on the screen
-    @Override
+    /**
+     * Draws the enemy on the screen.
+     *
+     * @param g2 The Graphics2D object used for rendering.
+     */
     public void draw(Graphics2D g2) {
-        // Check if the sprite is loaded successfully
-        if (sprite != null) {
-            // Draw the sprite at the enemy's current position with its specified size
-            g2.drawImage(sprite, x, y, null);
+        if (isAlive) {
+            if (sprite != null) {
+                // Draw the sprite if available
+                g2.drawImage(sprite, x, y, null);
+            } else {
+                // Fallback: Draw a red rectangle if sprite is missing
+                g2.setColor(Color.RED);
+                g2.fillRect(x, y, 40, 30); // Default size
+            }
         }
+    }
+
+    /**
+     * Handles damage to the enemy.
+     * If health reaches 0, the enemy is marked as dead.
+     */
+    public void takeDamage() {
+        health--; // Reduce health by 1
+        if (health <= 0) {
+            isAlive = false; // Mark the enemy as dead
+            System.out.println("Enemy destroyed at position (" + x + ", " + y + ")");
+        } else {
+            System.out.println("Enemy took damage. Remaining health: " + health);
+        }
+    }
+
+    // Getters and Setters
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

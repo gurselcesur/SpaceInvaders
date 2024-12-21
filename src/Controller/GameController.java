@@ -2,11 +2,7 @@ package Controller;
 
 import Model.GameState;
 import Model.ScoreboardModel;
-import View.GameRenderer;
-import View.GameView;
-import View.MainMenu;
-import View.PauseScreen;
-
+import View.*;
 import javax.swing.*;
 
 public class GameController {
@@ -33,7 +29,7 @@ public class GameController {
      * Starts the game loop, which continuously updates the game and refreshes the view.
      */
     private void startGameLoop() {
-        System.out.println("Starting game loop for user: " + username);
+        // System.out.println("Starting game loop for user: " + username);
         new Thread(() -> {
             while (!gameState.isGameOver()) {
                 if (!isPaused) {
@@ -79,7 +75,6 @@ public class GameController {
 
             // Exit the game when Exit button is clicked
             pauseScreen.getExitButton().addActionListener(e -> System.exit(0));
-
             pauseScreen.setVisible(true);
         });
     }

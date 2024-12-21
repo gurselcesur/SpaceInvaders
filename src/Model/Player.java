@@ -66,9 +66,9 @@ public class Player extends EntityBase {
             for (int i = 0; i < 5; i++) {
                 String default_path = System.getProperty("user.dir") + "/resources/img/space_ship/default/default" + (i + 1) + ".png";
                 defaultSprites[i] = ImageIO.read(new FileInputStream(default_path));
-                String left_path = System.getProperty("user.dir") + "/resources/img/space_ship/default/default" + (i + 1) + ".png";
+                String left_path = System.getProperty("user.dir") + "/resources/img/space_ship/left/left" + (i + 1) + ".png";
                 leftSprites[i] = ImageIO.read(new FileInputStream(left_path));
-                String right_path = System.getProperty("user.dir") + "/resources/img/space_ship/default/default" + (i + 1) + ".png";
+                String right_path = System.getProperty("user.dir") + "/resources/img/space_ship/right/right" + (i + 1) + ".png";
                 rightSprites[i] = ImageIO.read(new FileInputStream(right_path));
             }
         } catch (Exception e) {

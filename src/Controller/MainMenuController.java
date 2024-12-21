@@ -6,7 +6,6 @@ import View.GameRenderer;
 import View.GameView;
 import View.MainMenu;
 import View.ScoreboardView;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
