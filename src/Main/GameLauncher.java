@@ -1,6 +1,7 @@
 package Main;
 
 import Model.ScoreboardModel;
+import Utils.SoundManager;
 import View.*;
 import Controller.MainMenuController;
 

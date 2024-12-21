@@ -2,6 +2,7 @@ package Controller;
 
 import Model.GameState;
 import Model.ScoreboardModel;
+import Utils.SoundManager;
 import View.*;
 import javax.swing.*;
 
@@ -11,12 +12,14 @@ public class GameController {
     private final GameState gameState;
     private final String username;
     private boolean isPaused = false;
+    private SoundManager soundManager;
 
     public GameController(GameState gameState, GameRenderer gameRenderer, GameView gameView, String username) {
         this.gameState = gameState;
         this.gameRenderer = gameRenderer;
         this.gameView = gameView;
         this.username = username;
+        soundManager = SoundManager.getInstance();
 
         // Attach action listener to Pause button
         gameView.getPauseButton().addActionListener(e -> pauseGame());

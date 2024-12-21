@@ -1,27 +1,21 @@
 package View;
 
+import Utils.SoundManager;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import javax.sound.sampled.*;
-
 
 public class MainMenu extends JFrame {
     private JTextField usernameField;    // Text field for username input
     private JButton startGameButton;    // Start Game button
-    private JButton showScoreboardButton;// Show Scoreboard button
-    private Clip backgroundMusicClip;// Clip for background music
-    private JButton lowerSoundButton;
-    private JButton higherSoundButton;
-
-    private float volumeLevel;
-    private FloatControl volumeControl; // Control for adjusting volume
-
+    private JButton showScoreboardButton; // Show Scoreboard button
+    private JButton lowerSoundButton;    // Lower volume button
+    private JButton higherSoundButton;   // Increase volume button
+    private final SoundManager soundManager; // SoundManager instance
 
     public MainMenu() {
+        soundManager = SoundManager.getInstance();
+
         // Frame setup
         setTitle("Space Invaders");
         setSize(700, 500);
@@ -75,102 +69,27 @@ public class MainMenu extends JFrame {
         higherSoundButton.setBounds(400, 400, 150, 40);
         add(higherSoundButton);
 
+        // Attach button listeners for volume control
+        lowerSoundButton.addActionListener(e -> soundManager.decreaseVolume());
+        higherSoundButton.addActionListener(e -> soundManager.increaseVolume());
+
         // Play background music
-        playBackgroundMusic("resources/sound/SpaceWeed319.wav");
+        soundManager.playBackgroundMusic("resources/sound/SpaceWeed319.wav"); // Load background music
+        soundManager.loop(); // Start looping background music
 
         // Make the frame visible
         setVisible(true);
     }
-    //getter & setters
-    public JButton getLowerSoundButton() {
-        return lowerSoundButton;
-    }
-    public void setLowerSoundButton(JButton lowerSoundButton) {
-        this.lowerSoundButton = lowerSoundButton;
-    }
-
-    public JButton getHigherSoundButton() {
-        return higherSoundButton;
-    }
-    public void setHigherSoundButton(JButton higherSoundButton) {
-        this.higherSoundButton = higherSoundButton;
-    }
-
-    public FloatControl getVolumeControl() {
-        return volumeControl;
-    }
-    public void setVolumeControl(FloatControl volumeControl) {
-        this.volumeControl = volumeControl;
-    }
-
-    public float getVolumeLevel() {
-        return volumeLevel;
-    }
-
-    // Method to play background music
-    private void playBackgroundMusic(String filePath) {
-        try {
-            File musicFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
-            backgroundMusicClip = AudioSystem.getClip();
-            backgroundMusicClip.open(audioStream);
-
-            // Retrieve the volume control after opening the clip
-            if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
-                volumeControl.setValue(volumeLevel);
-            }
-
-            backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously
-            backgroundMusicClip.start();
-
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Adjust volume
-    public void increaseVolume() {
-        if (volumeControl != null) {
-            volumeLevel = volumeLevel+ 10.0f; // Increase by 2 decibels
-            volumeLevel = Math.min(volumeLevel, volumeControl.getMaximum());
-
-            volumeControl.setValue(Math.min(volumeLevel, volumeControl.getMaximum()));
-            System.out.println(volumeLevel);
-            System.out.println("Volume increased to: " + volumeLevel);
-        }else{
-            System.out.println("Volume control is not initialized.");
-        }
-    }
-
-    public void decreaseVolume() {
-        if (volumeControl != null) {
-            volumeLevel = volumeLevel - 10.0f; // Decrease by 2 decibels
-            volumeLevel = Math.max(volumeLevel, volumeControl.getMinimum());
-
-            volumeControl.setValue(Math.max(volumeLevel, volumeControl.getMinimum()));
-            System.out.println(volumeLevel);
-            System.out.println("Volume decreased to: " + volumeLevel);
-        }else{
-            System.out.println("Volume control is not initialized.");
-        }
-    }
 
 
-
-    // Stop music when the application closes
-    @Override
-    public void dispose() {
-        if (backgroundMusicClip != null && backgroundMusicClip.isRunning()) {
-            backgroundMusicClip.stop();
-            backgroundMusicClip.close();
-        }
-        super.dispose();
-    }
 
     // Getter methods
     public JTextField getUsernameField() {
         return usernameField;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     public JButton getStartGameButton() {
@@ -180,5 +99,10 @@ public class MainMenu extends JFrame {
     public JButton getShowScoreboardButton() {
         return showScoreboardButton;
     }
-
+    public JButton getLowerSoundButton(){
+        return lowerSoundButton;
+    }
+    public JButton getHigherSoundButton(){
+        return higherSoundButton;
+    }
 }

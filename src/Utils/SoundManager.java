@@ -1,71 +1,133 @@
 package Utils;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
-// This class manages audio playback using Java's Sound API
 public class SoundManager {
+    private static SoundManager instance; // Singleton instance
+    private Clip soundClip; // Clip for audio playback
+    private FloatControl volumeControl; // For adjusting volume
+    private final URL[] soundURLs = new URL[30]; // Array to store sound file paths
+    private Clip backgroundMusicClip; // Clip for background music
 
-    Clip soundClip; // The audio clip to be played
-    URL soundURL[] = new URL[30];
+    // Private constructor to prevent direct instantiation
+    private SoundManager() {
+        // Background music
+        soundURLs[0] = getClass().getResource("/sound/Unorganic Asteroid Beat.wav");
+        soundURLs[1] = getClass().getResource("resources/sound/SpaceWeed319.wav");
 
-    // Constructor to initialize and load a sound clip from a given file path
-    public SoundManager() {
-        //background musics
-        soundURL[0] = getClass().getResource("/sound/Unorganic Asteroid Beat.wav");
-        soundURL[1] = getClass().getResource("/sound/SpaceWeed319.wav");
-
-        //sound effects
-        soundURL[2] = getClass().getResource("/sound/PlayerShoot.wav");
-        soundURL[3] = getClass().getResource("/sound/EnemyShoot.wav");
-        soundURL[4] = getClass().getResource("/sound/BlasterCollisionSound.wav");
-
+        // Sound effects
+        soundURLs[2] = getClass().getResource("/sound/PlayerShoot.wav");
+        soundURLs[3] = getClass().getResource("/sound/EnemyShoot.wav");
+        soundURLs[4] = getClass().getResource("/sound/BlasterCollisionSound.wav");
     }
 
-    public void setFile(int i) {
+    // Public method to get the singleton instance
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
+    }
+
+    public void play() {
+        if (soundClip != null) {
+            soundClip.start();
+        }
+    }
+
+    public void loop() {
+        if (soundClip != null) {
+            soundClip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    public void stop() {
+        if (soundClip != null && soundClip.isRunning()) {
+            soundClip.stop();
+        }
+    }
+
+    public void increaseVolume() {
+        if (volumeControl != null) {
+            float currentVolume = volumeControl.getValue();
+            volumeControl.setValue(Math.min(currentVolume + 2.0f, volumeControl.getMaximum()));
+            System.out.println("Volume increased to: " + volumeControl.getValue());
+        }
+    }
+
+    public void decreaseVolume() {
+        if (volumeControl != null) {
+            float currentVolume = volumeControl.getValue();
+            volumeControl.setValue(Math.max(currentVolume - 2.0f, volumeControl.getMinimum()));
+            System.out.println("Volume decreased to: " + volumeControl.getValue());
+        }
+    }
+
+
+    public void playBackgroundMusic(String filePath) {
+        stopBackgroundMusic();
         try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
-            soundClip.open(ais);
-        } catch (Exception e) {
+            System.out.println("Loading music file: " + filePath);
+            File musicFile = new File(filePath);
+            if (!musicFile.exists()) {
+                System.err.println("Music file not found: " + filePath);
+                return;
+            }
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
+            backgroundMusicClip = AudioSystem.getClip();
+            backgroundMusicClip.open(audioStream);
+
+            // Retrieve the volume control after opening the clip
+            if (backgroundMusicClip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                volumeControl = (FloatControl) backgroundMusicClip.getControl(FloatControl.Type.MASTER_GAIN);
+                volumeControl.setValue(-20); // Set default volume level
+            }
+
+            System.out.println("Starting background music...");
+            backgroundMusicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop continuously
+            backgroundMusicClip.start();
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    public void playSound(){
-        soundClip.start();
-    }
-    public void loopSound(){
-        soundClip.loop(Clip.LOOP_CONTINUOUSLY);
-    }
-    public void stopSound(){
-        soundClip.stop();
-    }
-
-    /*
-
-    --- for background ---
-
-    public void playMusic(int i){
-        SoundManager sound = new SoundManager();
-        sound.setFile(int value);
-        sound.play();
-        sound.loop();
+    public void stopBackgroundMusic() {
+        if (backgroundMusicClip != null && backgroundMusicClip.isRunning()) {
+            backgroundMusicClip.stop();  // Stop playback
+            backgroundMusicClip.close(); // Release resources
+            backgroundMusicClip = null; // Reset the Clip reference
+            System.out.println("Background music stopped and resources released.");
+        }
     }
 
-    public void stopMusic(){
-        sound.stop();
+    public void playShootSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/PlayerShoot.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
-        --- for sound effect ---
-    public void playSE(int value){
-    sound.setFile(value);
-    sound.play();
+    public void enemyHitSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/BlasterCollisionSound.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
-     */
-
-
-
 }
-

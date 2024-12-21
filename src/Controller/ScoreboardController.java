@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.ScoreboardModel;
+import Utils.SoundManager;
 import View.ScoreboardView;
 import View.MainMenu;
 
@@ -10,10 +11,12 @@ import java.awt.event.ActionListener;
 public class ScoreboardController {
     private ScoreboardView scoreboardView;
     private ScoreboardModel scoreboardModel;
+    private SoundManager soundManager;
 
     public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel) {
         this.scoreboardView = scoreboardView;
         this.scoreboardModel = scoreboardModel;
+        soundManager = SoundManager.getInstance();
 
         // Attach action listener to the Return to Main Menu button
         scoreboardView.getReturnToMainMenuButton().addActionListener(new ActionListener() {
