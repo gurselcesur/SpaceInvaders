@@ -2,6 +2,7 @@ package Model;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -101,4 +102,44 @@ public class ScoreboardModel {
             return score;
         }
     }
+
+    /**
+     * Write player's username and score to the scoreboard file.
+     */
+    public void writeScoreToFile(String username, int score) {
+        List<String> scoreList = new ArrayList<>();
+
+        // Mevcut scoreboard.txt dosyasını oku
+        try (BufferedReader reader = new BufferedReader(new FileReader("resources/scoreboard.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                scoreList.add(line);  // Dosyadaki her satırı listeye ekle
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the scoreboard file: " + e.getMessage());
+        }
+
+        // Yeni skoru listeye ekle
+        scoreList.add(username + " - " + score);
+
+        // Listeyi skorlara göre büyükten küçüğe sırala
+        scoreList.sort((entry1, entry2) -> {
+            // Skorları ayıklayıp karşılaştırıyoruz
+            int score1 = Integer.parseInt(entry1.split(" - ")[1]);
+            int score2 = Integer.parseInt(entry2.split(" - ")[1]);
+            return Integer.compare(score2, score1);  // Büyükten küçüğe sıralama
+        });
+
+        // Sıralı listeyi dosyaya yaz
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resources/scoreboard.txt"))) {
+            for (String entry : scoreList) {
+                writer.write(entry);
+                writer.newLine();  // Yeni satır ekle
+            }
+            System.out.println("Score written to scoreboard.txt: " + username + " - " + score);
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the scoreboard file: " + e.getMessage());
+        }
+    }
+
 }

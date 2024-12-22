@@ -18,6 +18,7 @@ public class GameRenderer extends JPanel {
     private Player player;
     private FloatControl volumeControl; // Control for adjusting volume
     private BufferedImage backgroundImage; // Background image
+    private BufferedImage gameOverImage; // Game Over image
 
 
     public GameRenderer(GameState gameState, InputHandler inputHandler) {
@@ -30,6 +31,7 @@ public class GameRenderer extends JPanel {
         // Load the background image
         try {
             backgroundImage = ImageIO.read(new File("resources/img/Background.jpeg"));
+            gameOverImage = ImageIO.read(new File("resources/img/gameover.png")); // Load Game Over image
         } catch (IOException e) {
             System.err.println("Background image not found: " + e.getMessage());
         }
@@ -50,14 +52,15 @@ public class GameRenderer extends JPanel {
         // Draw the game background
         drawBackground(g2);
 
-        // Draw the player
-        drawPlayer(g2);
-
-        // Draw bullets
-        drawBullets(g2);
-
-        // Draw enemies
-        drawEnemies(g2);
+        // If the game is over, show the Game Over image
+        if (gameState.isGameOver()) {
+            drawGameOver(g2);
+        } else {
+            // Draw the player, bullets, and enemies only if the game is not over
+            drawPlayer(g2);
+            drawBullets(g2);
+            drawEnemies(g2);
+        }
     }
 
     /**
@@ -69,6 +72,21 @@ public class GameRenderer extends JPanel {
         } else {
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
+    /**
+     * Draws the Game Over screen.
+     */
+    private void drawGameOver(Graphics2D g2) {
+        if (gameOverImage != null) {
+            int x = (getWidth() - gameOverImage.getWidth()) / 2;
+            int y = (getHeight() - gameOverImage.getHeight()) / 2;
+            g2.drawImage(gameOverImage, x, y, null);
+        } else {
+            g2.setColor(Color.RED);
+            g2.setFont(new Font("Arial", Font.BOLD, 48));
+            g2.drawString("GAME OVER", getWidth() / 3, getHeight() / 2);
         }
     }
 
@@ -114,4 +132,5 @@ public class GameRenderer extends JPanel {
         // Debugging
         System.out.println("GameRenderer repainted. Player position: (" + player.getX() + ", " + player.getY() + ")");
     }
+
 }

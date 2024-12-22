@@ -64,7 +64,7 @@ public class GameState {
 
         // Update player actions
         player.update();
-        
+
         // Handle shooting with cooldown
         long currentTime = System.currentTimeMillis();
         if (player.getInputHandler().shootPressed && currentTime - lastBulletTime >= BULLET_COOLDOWN) {
@@ -83,7 +83,7 @@ public class GameState {
         updateEnemies();
 
         // Check if the game is over
-        checkGameOver();
+       // checkGameOver();
     }
 
 
@@ -196,11 +196,14 @@ public class GameState {
      * Checks for game-over conditions.
      */
     private void checkGameOver() {
-        if (player.getHealth() <= 0) {
+        if (player.getHealth() == 0) {
+
             isGameOver = true;
-            soundManager.gameOverSound();
-            scoreboard.addHighscore(player.getUsername(),getScore());
             System.out.println("Game Over! Player health reached 0.");
+
+            // Write player username and score to scoreboard.txt when game is over
+            ScoreboardModel scoreboardModel = new ScoreboardModel();
+            scoreboardModel.writeScoreToFile(player.getUsername(), score);
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
             if (rowSize != 5 && colSize != 8){
                 rowSize++;
