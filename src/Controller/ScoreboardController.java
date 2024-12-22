@@ -2,6 +2,7 @@ package Controller;
 
 import Model.ScoreboardModel;
 import Utils.SoundManager;
+import View.GameView;
 import View.ScoreboardView;
 import View.MainMenu;
 
@@ -11,13 +12,25 @@ import java.awt.event.ActionListener;
 public class ScoreboardController {
     private ScoreboardView scoreboardView;
     private ScoreboardModel scoreboardModel;
-    private SoundManager soundManager;
+    private GameView gameView;
+
+    public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel, GameView gameView) {
+        this.scoreboardView = scoreboardView;
+        this.scoreboardModel = scoreboardModel;
+        this.gameView = gameView;
+
+        // Attach action listener to the Return to Main Menu button
+        scoreboardView.getReturnToMainMenuButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                returnToMainMenu();
+            }
+        });
+    }
 
     public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel) {
         this.scoreboardView = scoreboardView;
         this.scoreboardModel = scoreboardModel;
-        soundManager = SoundManager.getInstance();
-
         // Attach action listener to the Return to Main Menu button
         scoreboardView.getReturnToMainMenuButton().addActionListener(new ActionListener() {
             @Override
@@ -32,6 +45,12 @@ public class ScoreboardController {
      */
     private void returnToMainMenu() {
         new MainMenuController(new MainMenu(), scoreboardModel); // Pass the model to MainMenuController
-        scoreboardView.dispose(); // Close the ScoreboardView
+        if(gameView.isGameViewOn()){
+            scoreboardView.dispose(); // Close the ScoreboardView
+            gameView.setGameViewOn(false);
+            gameView.dispose();
+        }else{
+            scoreboardView.dispose();
+        }
     }
 }

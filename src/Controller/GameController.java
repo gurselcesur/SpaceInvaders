@@ -112,7 +112,7 @@ public class GameController {
         SwingUtilities.invokeLater(() -> {
             List<String> highscores = scoreboardModel.getHighscores(); // Fetch highscores
             ScoreboardView scoreboardView = new ScoreboardView(highscores); // Create the view
-            new ScoreboardController(scoreboardView, scoreboardModel); // Create the controller
+            new ScoreboardController(scoreboardView, scoreboardModel , gameView); // Create the controller
             scoreboardView.setVisible(true); // Display the scoreboard
         });
     }

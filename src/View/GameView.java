@@ -15,8 +15,10 @@ public class GameView extends JFrame {
     private MainMenu mainMenu; // Reference to MainMenu
     private SoundManager soundManager; // SoundManager instance for audio management
     private JSlider soundControlSlider; // Slider to control sound volume
+    private boolean isGameViewOn = false;
 
     public GameView(String username, GameState gameState, GameRenderer gameRenderer, MainMenu mainMenu) {
+        this.isGameViewOn = true;
         this.gameState = gameState;
         this.gameRenderer = gameRenderer;
         this.mainMenu = mainMenu;
@@ -88,6 +90,14 @@ public class GameView extends JFrame {
 
         // Make the frame visible
         setVisible(true);
+    }
+
+    public boolean isGameViewOn() {
+        return isGameViewOn;
+    }
+
+    public void setGameViewOn(boolean gameViewOn) {
+        isGameViewOn = gameViewOn;
     }
 
     public JButton getPauseButton() {

@@ -38,7 +38,7 @@ public class PauseController {
             public void actionPerformed(ActionEvent e) {
 
                 java.util.List<String> highscores = scoreboardModel.getHighscores();
-                new ScoreboardController(new ScoreboardView(highscores), scoreboardModel);
+                new ScoreboardController(new ScoreboardView(highscores), scoreboardModel , gameView);
             }
         });
     }
