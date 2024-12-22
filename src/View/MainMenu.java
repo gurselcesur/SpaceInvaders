@@ -55,14 +55,16 @@ public class MainMenu extends JFrame {
 
         // Welcome user label
         JLabel welcomeLabel = new JLabel("Welcome to Space Invaders!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        welcomeLabel.setForeground(Color.WHITE);
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        welcomeLabel.setBounds(150, 50, 400, 50);
+        welcomeLabel.setBounds(50, 45, 600, 50); // Daha geniş bir alan ver
         add(welcomeLabel);
 
         // Username label
         JLabel usernameLabel = new JLabel("Enter your username:");
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        usernameLabel.setForeground(Color.WHITE);
         usernameLabel.setBounds(200, 150, 200, 30);
         add(usernameLabel);
 
@@ -93,7 +95,9 @@ public class MainMenu extends JFrame {
 
         // Volume label
         JLabel soundLabel = new JLabel("Volume:");
+        soundLabel.setForeground(Color.WHITE);
         soundLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
         soundLabel.setBounds(250, 400, 100, 30); // Position the label
         add(soundLabel);
 
