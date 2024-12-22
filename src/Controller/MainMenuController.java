@@ -35,19 +35,7 @@ public class MainMenuController {
             }
         });
 
-        mainMenu.getLowerSoundButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                lowerSound();
-            }
-        });
 
-        mainMenu.getHigherSoundButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                raiseSound();
-            }
-        });
 
     }
 
