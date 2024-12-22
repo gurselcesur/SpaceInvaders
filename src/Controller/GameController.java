@@ -4,22 +4,26 @@ import Model.GameState;
 import Model.ScoreboardModel;
 import Utils.SoundManager;
 import View.*;
+
 import javax.swing.*;
+import java.util.List;
 
 public class GameController {
     private final GameRenderer gameRenderer;
     private final GameView gameView;
     private final GameState gameState;
+    private final ScoreboardModel scoreboardModel;
     private final String username;
     private boolean isPaused = false;
-    private SoundManager soundManager;
+    private final SoundManager soundManager;
 
     public GameController(GameState gameState, GameRenderer gameRenderer, GameView gameView, String username) {
         this.gameState = gameState;
         this.gameRenderer = gameRenderer;
         this.gameView = gameView;
         this.username = username;
-        soundManager = SoundManager.getInstance();
+        this.soundManager = SoundManager.getInstance();
+        this.scoreboardModel = new ScoreboardModel();
 
         // Attach action listener to Pause button
         gameView.getPauseButton().addActionListener(e -> pauseGame());
@@ -32,7 +36,6 @@ public class GameController {
      * Starts the game loop, which continuously updates the game and refreshes the view.
      */
     private void startGameLoop() {
-        // System.out.println("Starting game loop for user: " + username);
         new Thread(() -> {
             while (!gameState.isGameOver()) {
                 if (!isPaused) {
@@ -48,9 +51,20 @@ public class GameController {
                     e.printStackTrace();
                 }
             }
-            // Handle game-over logic here if needed
-            System.out.println("Game Over!");
+            handleGameOver();
         }).start();
+    }
+
+    /**
+     * Handle the game-over logic.
+     */
+    private void handleGameOver() {
+        System.out.println("Game Over!");
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(gameView, "Game Over! Your score: " + gameState.getScore());
+            new MainMenuController(new MainMenu(), scoreboardModel); // Transition to main menu
+            gameView.dispose();
+        });
     }
 
     /**
@@ -59,7 +73,6 @@ public class GameController {
     private void pauseGame() {
         isPaused = true;
 
-        // Display the pause screen
         SwingUtilities.invokeLater(() -> {
             PauseScreen pauseScreen = new PauseScreen();
 
@@ -74,19 +87,20 @@ public class GameController {
             // Show Scoreboard when Show Scoreboard button is clicked
             pauseScreen.getShowScoreboardButton().addActionListener(e -> {
                 pauseScreen.dispose();
-                //showScoreboard();
+                showScoreboard();
             });
 
             // Return to Main Menu when Main Menu button is clicked
             pauseScreen.getMainMenuButton().addActionListener(e -> {
                 pauseScreen.dispose();
                 gameView.dispose();
-                new MainMenuController(new MainMenu(), new ScoreboardModel());
+                new MainMenuController(new MainMenu(), scoreboardModel);
                 gameView.getPauseButton().setEnabled(true);
             });
 
             // Exit the game when Exit button is clicked
             pauseScreen.getExitButton().addActionListener(e -> System.exit(0));
+
             pauseScreen.setVisible(true);
         });
     }
@@ -94,7 +108,14 @@ public class GameController {
     /**
      * Show the scoreboard.
      */
-
+    private void showScoreboard() {
+        SwingUtilities.invokeLater(() -> {
+            List<String> highscores = scoreboardModel.getHighscores(); // Fetch highscores
+            ScoreboardView scoreboardView = new ScoreboardView(highscores); // Create the view
+            new ScoreboardController(scoreboardView, scoreboardModel); // Create the controller
+            scoreboardView.setVisible(true); // Display the scoreboard
+        });
+    }
 
     /**
      * Resume the game by closing the pause screen and continuing the game loop.
@@ -103,5 +124,4 @@ public class GameController {
         gameView.getPauseButton().setEnabled(true);
         isPaused = false;
     }
-
 }
