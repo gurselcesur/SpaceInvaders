@@ -1,6 +1,8 @@
 package Model;
 
 import Controller.InputHandler;
+import Controller.MainMenuController;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,8 +16,14 @@ public class GameState {
     private int score;                   // Player's score
     private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
-    private int enemyBulletDamage = 15;
     private Random random = new Random(); // Random instance for enemy shooting
+    private ScoreboardModel scoreboard = new ScoreboardModel() ;
+
+    private int shootChance = 5; // Chance for a random enemy to shoot
+    private int enemyBulletDamage = 10;
+    private int rowSize = 3;
+    private int colSize = 4;
+
 
     public GameState(String username, InputHandler inputHandler) {
         player = new Player(username, inputHandler);
@@ -23,22 +31,22 @@ public class GameState {
         bullets = new ArrayList<>();
         isGameOver = false;
         score = 0;
-        initializeEnemies();
+        initializeEnemies(rowSize,colSize);
     }
 
     /**
+     * rowSize: Number of rows of enemies
+     * colSize: Number of enemies per row
      * Initializes enemies at the start of the game.
      */
-    private void initializeEnemies() {
-        int enemyWidth = 40;  // Example width of each enemy
-        int enemyHeight = 30; // Example height of each enemy
-        int rows = 4;         // Number of rows of enemies
-        int cols = 6;         // Number of enemies per row
-        int spacingX = 20;    // Horizontal spacing
-        int spacingY = 15;    // Vertical spacing
+    private void initializeEnemies(int rowSize, int colSize) {
+        int enemyWidth = 32;  // Example width of each enemy
+        int enemyHeight = 32; // Example height of each enemy
+        int spacingX = 32;    // Horizontal spacing
+        int spacingY = 16;    // Vertical spacing
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < rowSize; row++) {
+            for (int col = 0; col < colSize; col++) {
                 int x = 50 + col * (enemyWidth + spacingX);
                 int y = 50 + row * (enemyHeight + spacingY);
                 enemies.add(new Enemy(x, y, enemyWidth, enemyHeight, 2)); // Pass all required arguments
@@ -107,12 +115,11 @@ public class GameState {
             }
         }
     }
-
     /**
      * Handles random enemy shooting with a chance.
      */
     private void handleEnemyShooting() {
-        int shootChance = 5; // 5% chance for a random enemy to shoot
+
         if (random.nextInt(100) < shootChance) {
             Enemy shooter = getRandomAliveEnemy();
             if (shooter != null) {
@@ -133,7 +140,6 @@ public class GameState {
         }
         return null;
     }
-
 
     /**
      * Handles collisions between player bullets and enemies.
@@ -194,7 +200,6 @@ public class GameState {
         }
     }
 
-
     /**
      * Updates enemies' positions and interactions.
      */
@@ -213,10 +218,17 @@ public class GameState {
     private void checkGameOver() {
         if (player.getHealth() <= 0) {
             isGameOver = true;
+            scoreboard.addHighscore(player.getUsername(),player.getHealth());
             System.out.println("Game Over! Player health reached 0.");
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
-            isGameOver = true;
-            System.out.println("Game Over! You win!");
+            if (rowSize != 5 && colSize != 8){
+                rowSize++;
+                colSize++;
+            }
+            shootChance++;
+            enemyBulletDamage += 5;
+            initializeEnemies(rowSize,colSize);
+            System.out.println("New Wave Coming Down!");
         }
     }
 

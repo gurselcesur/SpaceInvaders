@@ -42,8 +42,8 @@ public class Player extends EntityBase {
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
-        x = 352;
-        y = 350;
+        x = 350;
+        y = 450;
         width = 48;
         height = 48;
         soundManager = SoundManager.getInstance();
@@ -175,6 +175,10 @@ public class Player extends EntityBase {
                 x + width > bullet.getX() &&
                 y < bullet.getY() + bullet.getHeight() &&
                 y + height > bullet.getY();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 }

@@ -1,7 +1,8 @@
+Dalyarak - 100000
 John Pork - 7000
 Sarah - 4500
 Alice - 4000
 Bob - 3000
 John - 2500
-Dalyarak - 100000
-
+giga - 0
+giga - 0
