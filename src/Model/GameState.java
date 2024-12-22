@@ -1,7 +1,6 @@
 package Model;
 
 import Controller.InputHandler;
-import Controller.MainMenuController;
 import Utils.SoundManager;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -160,27 +159,6 @@ public class GameState {
                     System.out.println("Enemy destroyed! Score: " + score);
                 }
                 break; // Exit after handling collision
-            }
-        }
-    }
-
-    /**
-     * Handles collisions between bullets and the player.
-     */
-    private void handleBulletPlayerCollisions() {
-        Iterator<Bullet> bulletIterator = bullets.iterator();
-
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-
-            // Check if the bullet is an enemy bullet and collides with the player
-            if (!bullet.isPlayerBullet() && player.collidesWithBullet(bullet)) {
-                player.takeDamage(enemyBulletDamage); // Reduce player's health by bullet damage
-                bulletIterator.remove(); // Remove the bullet after collision
-
-                System.out.println("Player hit! Remaining health: " + player.getHealth());
-
-                checkGameOver();
             }
         }
     }
