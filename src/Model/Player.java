@@ -19,7 +19,9 @@ public class Player extends EntityBase {
     private int health;          // Current health of the player
     private int score;           // Player's score
     private int speed;           // Movement speed of the player
-    private String direction;    // Current direction of the player ("default", "left", "right")
+    private String direction; // Current direction of the player ("default", "left", "right")
+    private int width;
+    private int height;
 
     // Sprites for different animations (default, left, right)
     private BufferedImage[] defaultSprites = new BufferedImage[5];
@@ -31,6 +33,8 @@ public class Player extends EntityBase {
     private InputHandler inputH;   // Reference to the input handler
     private SoundManager soundManager;
 
+
+
     // Constructor: Initializes the player and its attributes
     public Player(String username, InputHandler inputH) {
         super(300, 300); // Call to the parent class constructor
@@ -38,8 +42,10 @@ public class Player extends EntityBase {
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
-        x = 384;
-        y = 450;
+        x = 352;
+        y = 350;
+        width = 48;
+        height = 48;
         soundManager = SoundManager.getInstance();
         // Debugging: Confirm player initialization
         System.out.println("Player initialized at position (" + x + ", " + y + ")");
@@ -155,6 +161,13 @@ public class Player extends EntityBase {
         int bulletY = y - 10; // Start just above the player
         soundManager.playShootSound();
         return new Bullet(bulletX, bulletY, 10, 10, true); // Player bullet with speed 10
+    }
+
+    public boolean collidesWith(Enemy enemy) {
+        return x < enemy.getX() + enemy.getWidth() &&
+                x + width > enemy.getX() &&
+                y < enemy.getY() + enemy.getHeight() &&
+                y + height > enemy.getY();
     }
 
 }

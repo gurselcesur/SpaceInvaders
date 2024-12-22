@@ -29,8 +29,8 @@ public class GameState {
     private void initializeEnemies() {
         int enemyWidth = 40;  // Example width of each enemy
         int enemyHeight = 30; // Example height of each enemy
-        int rows = 2;         // Number of rows of enemies
-        int cols = 2;         // Number of enemies per row
+        int rows = 4;         // Number of rows of enemies
+        int cols = 6;         // Number of enemies per row
         int spacingX = 20;    // Horizontal spacing
         int spacingY = 15;    // Vertical spacing
 
@@ -115,6 +115,25 @@ public class GameState {
             }
         }
     }
+
+    //Handle collision between player bullets and enemies.
+    private void handlePlayerEnemyCollisions() {
+        for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
+            Enemy enemy = enemyIterator.next();
+            if (enemy.isAlive() && player.collidesWith(enemy)) {
+                enemy.takeDamage(); // Reduce enemy health
+                score += 10; // Increment score for destroying an enemy
+                player.takeDamage(10);
+                    if (!enemy.isAlive()) {
+                        enemyIterator.remove();
+                        System.out.println("Enemy destroyed at position (" + enemy.getX() + ", " + enemy.getY() + ")");
+                    }
+                    break; // Exit after handling collision
+            }
+        }
+    }
+
+
     /**
      * Updates enemies' positions and interactions.
      */
@@ -124,6 +143,7 @@ public class GameState {
                 enemy.update();
             }
         }
+        handlePlayerEnemyCollisions();
     }
 
     /**
