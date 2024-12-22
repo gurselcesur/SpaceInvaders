@@ -66,6 +66,7 @@ public class GameController {
         SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(gameView, "Game Over! Your score: " + gameState.getScore());
             new MainMenuController(new MainMenu(), scoreboardModel); // Transition to main menu
+
             gameView.dispose();
         });
     }

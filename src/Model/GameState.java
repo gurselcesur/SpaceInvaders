@@ -16,7 +16,7 @@ public class GameState {
     private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
     private Random random = new Random(); // Random instance for enemy shooting
-    private ScoreboardModel scoreboard = new ScoreboardModel() ;
+    private ScoreboardModel scoreboardModel ;
     private SoundManager soundManager = SoundManager.getInstance();
 
 
@@ -26,7 +26,8 @@ public class GameState {
     private int colSize = 4;
 
 
-    public GameState(String username, InputHandler inputHandler) {
+    public GameState(String username, InputHandler inputHandler,ScoreboardModel scoreboardModel) {
+        this.scoreboardModel = scoreboardModel;
         player = new Player(username, inputHandler);
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -82,7 +83,6 @@ public class GameState {
         // Update enemies and their behavior
         updateEnemies();
 
-        // Check if the game is over
         checkGameOver();
     }
 
@@ -199,8 +199,8 @@ public class GameState {
         if (player.getHealth() <= 0) {
             isGameOver = true;
             soundManager.gameOverSound();
-            scoreboard.addHighscore(player.getUsername(),getScore());
             System.out.println("Game Over! Player health reached 0.");
+            addHighscore(score);
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
             if (rowSize != 5 && colSize != 8){
                 rowSize++;
@@ -211,6 +211,11 @@ public class GameState {
             initializeEnemies(rowSize,colSize);
             System.out.println("New Wave Coming Down!");
         }
+    }
+
+    private void addHighscore(int score) {
+        scoreboardModel.addHighscore(player.getUsername(),score);
+        System.out.println("Score added to scoreboard");
     }
 
     // Getters and Setters

@@ -49,7 +49,7 @@ public class MainMenuController {
 
         // Create game objects
         InputHandler inputHandler = new InputHandler();
-        gameState = new GameState(username, inputHandler); // Model
+        gameState = new GameState(username, inputHandler,scoreboardModel); // Model
         System.out.println("Starting game for user: " + username);
         GameRenderer gameRenderer = new GameRenderer(gameState, inputHandler); // View
         GameView gameView = new GameView(username, gameState, gameRenderer, mainMenu); // View
@@ -64,12 +64,21 @@ public class MainMenuController {
     private void showScoreboard() {
         // Stop background music before showing the scoreboard
         mainMenu.getSoundManager().stopBackgroundMusic();
-        // Fetch highscores from the model
+
+        // Fetch the latest highscores from the model
         java.util.List<String> highscores = scoreboardModel.getHighscores();
 
-        // Transition to ScoreboardView with ScoreboardController
-        new ScoreboardController(new ScoreboardView(highscores), scoreboardModel, mainMenu);
-        mainMenu.dispose(); // Close the Main Menu window
+        // Create a new ScoreboardView with the latest data
+        ScoreboardView scoreboardView = new ScoreboardView(highscores);
+
+        // Transition to the updated ScoreboardView with a new ScoreboardController
+        new ScoreboardController(scoreboardView, scoreboardModel, mainMenu);
+
+        // Display the updated scoreboard
+        scoreboardView.setVisible(true);
+
+        // Close the Main Menu window
+        mainMenu.dispose();
     }
 
     // Handle the Lower Sound button click event.
