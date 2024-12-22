@@ -218,7 +218,7 @@ public class GameState {
     private void checkGameOver() {
         if (player.getHealth() <= 0) {
             isGameOver = true;
-            scoreboard.addHighscore(player.getUsername(),player.getHealth());
+            scoreboard.addHighscore(player.getUsername(),getScore());
             System.out.println("Game Over! Player health reached 0.");
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
             if (rowSize != 5 && colSize != 8){
