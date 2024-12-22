@@ -31,7 +31,7 @@ public class GameView extends JFrame {
 
         // Add the top panel with username, score, health, and pause button
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topPanel.setBackground(Color.DARK_GRAY);
+        topPanel.setBackground(Color.BLACK); // Transparent background
 
         JLabel usernameLabel = new JLabel("Player: " + username);
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
