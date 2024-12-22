@@ -18,7 +18,7 @@ public class GameState {
     private Random random = new Random(); // Random instance for enemy shooting
     private ScoreboardModel scoreboardModel ;
     private SoundManager soundManager = SoundManager.getInstance();
-
+    private int stageNumber = 1; // Stage number of the game
 
     private int shootChance = 5; // Chance for a random enemy to shoot
     private int enemyBulletDamage = 10;
@@ -206,6 +206,7 @@ public class GameState {
                 rowSize++;
                 colSize++;
             }
+            stageNumber++;
             shootChance++;
             enemyBulletDamage += 5;
             initializeEnemies(rowSize,colSize);
@@ -246,4 +247,6 @@ public class GameState {
     public int getScore() {
         return score;
     }
+
+    public int getStageNumber(){ return stageNumber; }
 }
