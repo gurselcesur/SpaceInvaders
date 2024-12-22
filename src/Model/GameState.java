@@ -65,7 +65,7 @@ public class GameState {
 
         // Update player actions
         player.update();
-
+        
         // Handle shooting with cooldown
         long currentTime = System.currentTimeMillis();
         if (player.getInputHandler().shootPressed && currentTime - lastBulletTime >= BULLET_COOLDOWN) {
