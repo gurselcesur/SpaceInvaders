@@ -14,7 +14,7 @@ public class ScoreboardTest {
         System.out.println("\n2) New scores are being added...");
         scoreboard.addHighscore("John", 2500);
         scoreboard.addHighscore("Sarah", 4500);
-        
+
 
         System.out.println("\n3) Updated scores:");
         for (String highscore : scoreboard.getHighscores()) {

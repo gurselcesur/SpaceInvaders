@@ -144,6 +144,32 @@ public class SoundManager {
         }
     }
 
+    public void playerHitSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/PlayerHitSound.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void gameOverSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/GameOver.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setVolume(float volume) {
         if (volumeControl != null) {
             float min = volumeControl.getMinimum(); // Minimum volume level (e.g., -80.0)

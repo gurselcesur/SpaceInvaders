@@ -2,7 +2,7 @@ package Model;
 
 import Controller.InputHandler;
 import Controller.MainMenuController;
-
+import Utils.SoundManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +18,8 @@ public class GameState {
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
     private Random random = new Random(); // Random instance for enemy shooting
     private ScoreboardModel scoreboard = new ScoreboardModel() ;
+    private SoundManager soundManager = SoundManager.getInstance();
+
 
     private int shootChance = 5; // Chance for a random enemy to shoot
     private int enemyBulletDamage = 10;
@@ -218,6 +220,7 @@ public class GameState {
     private void checkGameOver() {
         if (player.getHealth() <= 0) {
             isGameOver = true;
+            soundManager.gameOverSound();
             scoreboard.addHighscore(player.getUsername(),getScore());
             System.out.println("Game Over! Player health reached 0.");
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {

@@ -141,6 +141,7 @@ public class Player extends EntityBase {
     // Reduces the player's health by the given damage amount
     public void takeDamage(int damage) {
         health -= damage; // Subtract damage from health
+        soundManager.playerHitSound();
         if (health < 0) health = 0; // Ensure health doesn't go below zero
 
         // Debugging: Log health reduction
