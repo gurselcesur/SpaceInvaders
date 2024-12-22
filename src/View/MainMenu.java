@@ -2,8 +2,11 @@ package View;
 
 import Utils.SoundManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MainMenu extends JFrame {
     private JTextField usernameField;    // Text field for username input
@@ -11,6 +14,8 @@ public class MainMenu extends JFrame {
     private JButton showScoreboardButton; // Show Scoreboard button
     private final SoundManager soundManager; // SoundManager instance
     private JSlider soundControlSlider; // Slider to control sound volume
+
+    private Image backgroundImage;  // Field to store the background image
 
 
     public MainMenu() {
@@ -26,6 +31,27 @@ public class MainMenu extends JFrame {
         setResizable(false);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Load the background image
+        try {
+            backgroundImage = ImageIO.read(new File("resources/img/mainMenu.png"));
+        } catch (IOException e) {
+            System.err.println("Background image not found: " + e.getMessage());
+        }
+
+        // Create a custom JPanel to handle background image
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);  // Call to the super method to paint components
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
+        panel.setLayout(null);  // Use absolute positioning for components
+        setContentPane(panel);  // Set the custom panel as the content pane
 
         // Welcome user label
         JLabel welcomeLabel = new JLabel("Welcome to Space Invaders!");
