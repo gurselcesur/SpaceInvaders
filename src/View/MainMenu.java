@@ -79,8 +79,6 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
-
-
     // Getter methods
     public JTextField getUsernameField() {
         return usernameField;
