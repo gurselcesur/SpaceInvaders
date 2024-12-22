@@ -118,6 +118,19 @@ public class SoundManager {
         }
     }
 
+    public void enemyShootSound() {
+        try {
+            // Load the sound file
+            File soundFile = new File("resources/sound/EnemyShoot.wav");
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start(); // Play the sound
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void enemyHitSound() {
         try {
             // Load the sound file

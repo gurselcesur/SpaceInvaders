@@ -24,8 +24,11 @@ public class Bullet extends EntityBase {
     // Draws the bullet on the screen
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.YELLOW);
-        g2.fillRect(x, y, width, height);
+        g2.setColor(Color.WHITE );
+        // Bullet body
+        g2.fillRect(x, y + height / 4, width, height / 2);
+        g2.fillOval(x, y, width, height / 2);
+        g2.fillOval(x, y + height / 2, width, height / 2);
     }
 
     // Checks if the bullet collides with a given enemy
@@ -35,6 +38,15 @@ public class Bullet extends EntityBase {
                 y < enemy.getY() + enemy.getHeight() &&
                 y + height > enemy.getY();
     }
+
+    // Checks if the bullet collides with a given player
+    public boolean collidesWithPlayer(Player player) {
+        return x < player.getX() + player.getWidth() &&
+                x + width > player.getX() &&
+                y < player.getY() + player.getHeight() &&
+                y + height > player.getY();
+    }
+
 
     public boolean isOutOfBounds() {
         return y + height < 0 || y > 600; // Assuming the screen height is 600

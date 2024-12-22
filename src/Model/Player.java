@@ -160,7 +160,7 @@ public class Player extends EntityBase {
         int bulletX = x + 48 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
         soundManager.playShootSound();
-        return new Bullet(bulletX, bulletY, 10, 10, true); // Player bullet with speed 10
+        return new Bullet(bulletX, bulletY, 5, 15, true); // Player bullet with speed 10
     }
 
     public boolean collidesWith(Enemy enemy) {
