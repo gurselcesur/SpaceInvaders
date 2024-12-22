@@ -4,6 +4,7 @@ import Controller.InputHandler;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class GameState {
     private Player player;               // Player instance
@@ -13,6 +14,8 @@ public class GameState {
     private int score;                   // Player's score
     private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
+    private int enemyBulletDamage = 15;
+    private Random random = new Random(); // Random instance for enemy shooting
 
     public GameState(String username, InputHandler inputHandler) {
         player = new Player(username, inputHandler);
@@ -60,6 +63,10 @@ public class GameState {
             lastBulletTime = currentTime; // Update the last bullet time
         }
 
+        //Handle enemy shooting
+        handleEnemyShooting();
+
+
         // Update bullets and handle collisions
         updateBullets();
 
@@ -90,9 +97,42 @@ public class GameState {
             if (bullet.isPlayerBullet()) {
                 handleBulletEnemyCollisions(bulletIterator, bullet);
             }
+            // Check for collisions with player
+            else if (!bullet.isPlayerBullet() && player.collidesWithBullet(bullet)) {
+                player.takeDamage(enemyBulletDamage);
+                bulletIterator.remove(); // Remove the bullet after collision
+                System.out.println("Player hit! Remaining health: " + player.getHealth());
+
+                checkGameOver();
+            }
         }
     }
 
+    /**
+     * Handles random enemy shooting with a chance.
+     */
+    private void handleEnemyShooting() {
+        int shootChance = 5; // 5% chance for a random enemy to shoot
+        if (random.nextInt(100) < shootChance) {
+            Enemy shooter = getRandomAliveEnemy();
+            if (shooter != null) {
+                bullets.add(shooter.shootBullet());
+                System.out.println("Enemy shot a bullet from position (" + shooter.getX() + ", " + shooter.getY() + ")");
+            }
+        }
+    }
+
+    /**
+     * Gets a random alive enemy.
+     * @return a random alive enemy, or null if no enemies are alive
+     */
+    private Enemy getRandomAliveEnemy() {
+        List<Enemy> aliveEnemies = enemies.stream().filter(Enemy::isAlive).toList();
+        if (!aliveEnemies.isEmpty()) {
+            return aliveEnemies.get(random.nextInt(aliveEnemies.size()));
+        }
+        return null;
+    }
 
 
     /**
@@ -101,7 +141,7 @@ public class GameState {
     private void handleBulletEnemyCollisions(Iterator<Bullet> bulletIterator, Bullet bullet) {
         for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
             Enemy enemy = enemyIterator.next();
-            if (enemy.isAlive() && bullet.collidesWith(enemy)) {
+            if (enemy.isAlive() && bullet.collidesWithEnemy(enemy)) {
                 enemy.takeDamage(); // Reduce enemy health
                 bulletIterator.remove(); // Remove the bullet
                 score += 10; // Increment score for destroying an enemy
@@ -112,6 +152,27 @@ public class GameState {
                     System.out.println("Enemy destroyed! Score: " + score);
                 }
                 break; // Exit after handling collision
+            }
+        }
+    }
+
+    /**
+     * Handles collisions between bullets and the player.
+     */
+    private void handleBulletPlayerCollisions() {
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+
+            // Check if the bullet is an enemy bullet and collides with the player
+            if (!bullet.isPlayerBullet() && player.collidesWithBullet(bullet)) {
+                player.takeDamage(enemyBulletDamage); // Reduce player's health by bullet damage
+                bulletIterator.remove(); // Remove the bullet after collision
+
+                System.out.println("Player hit! Remaining health: " + player.getHealth());
+
+                checkGameOver();
             }
         }
     }

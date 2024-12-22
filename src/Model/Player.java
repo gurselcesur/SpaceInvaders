@@ -160,7 +160,7 @@ public class Player extends EntityBase {
         int bulletX = x + 48 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
         soundManager.playShootSound();
-        return new Bullet(bulletX, bulletY, 5, 15, true); // Player bullet with speed 10
+        return new Bullet(bulletX, bulletY, 5, 15, true);
     }
 
     public boolean collidesWith(Enemy enemy) {
@@ -168,6 +168,13 @@ public class Player extends EntityBase {
                 x + width > enemy.getX() &&
                 y < enemy.getY() + enemy.getHeight() &&
                 y + height > enemy.getY();
+    }
+
+    public boolean collidesWithBullet(Bullet bullet) {
+        return x < bullet.getX() + bullet.getWidth() &&
+                x + width > bullet.getX() &&
+                y < bullet.getY() + bullet.getHeight() &&
+                y + height > bullet.getY();
     }
 
 }

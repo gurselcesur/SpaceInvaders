@@ -89,6 +89,14 @@ public class Enemy extends EntityBase {
         }
     }
 
+    // Shoot a bullet
+    public Bullet shootBullet() {
+        int bulletX = x + 32 / 2 - 2; // Center bullet on the enemy
+        int bulletY = y + 10; // Start just below the enemy
+        soundManager.enemyShootSound();
+        return new Bullet(bulletX, bulletY, 5, 15, false);
+    }
+
     /**
      * Handles damage to the enemy.
      * If health reaches 0, the enemy is marked as dead.
