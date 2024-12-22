@@ -6,7 +6,6 @@ import View.GameRenderer;
 import View.GameView;
 import View.MainMenu;
 import View.ScoreboardView;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,9 +33,6 @@ public class MainMenuController {
                 showScoreboard();
             }
         });
-
-
-
     }
 
     /**
@@ -72,7 +68,7 @@ public class MainMenuController {
         java.util.List<String> highscores = scoreboardModel.getHighscores();
 
         // Transition to ScoreboardView with ScoreboardController
-        new ScoreboardController(new ScoreboardView(highscores), scoreboardModel);
+        new ScoreboardController(new ScoreboardView(highscores), scoreboardModel, mainMenu);
         mainMenu.dispose(); // Close the Main Menu window
     }
 

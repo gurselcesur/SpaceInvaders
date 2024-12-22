@@ -6,6 +6,8 @@ import Utils.SoundManager;
 import View.*;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class GameController {
@@ -14,6 +16,7 @@ public class GameController {
     private final GameState gameState;
     private final ScoreboardModel scoreboardModel;
     private final String username;
+
     private boolean isPaused = false;
     private final SoundManager soundManager;
 
@@ -86,8 +89,12 @@ public class GameController {
 
             // Show Scoreboard when Show Scoreboard button is clicked
             pauseScreen.getShowScoreboardButton().addActionListener(e -> {
-                pauseScreen.dispose();
+                pauseScreen.setVisible(false); // Hide the pause screen
                 showScoreboard();
+                SwingUtilities.invokeLater(() -> {
+                    gameView.getPauseButton().setEnabled(true); // Re-enable the pause button
+                    gameView.requestFocus(); // Restore focus to the game view
+                });
             });
 
             // Return to Main Menu when Main Menu button is clicked
@@ -110,10 +117,24 @@ public class GameController {
      */
     private void showScoreboard() {
         SwingUtilities.invokeLater(() -> {
-            List<String> highscores = scoreboardModel.getHighscores(); // Fetch highscores
-            ScoreboardView scoreboardView = new ScoreboardView(highscores); // Create the view
-            new ScoreboardController(scoreboardView, scoreboardModel , gameView); // Create the controller
-            scoreboardView.setVisible(true); // Display the scoreboard
+            // Create the scoreboard view
+            ScoreboardView scoreboardView = new ScoreboardView(scoreboardModel.getHighscores());
+            new ScoreboardController(scoreboardView, scoreboardModel, this);
+
+            // Ensure the scoreboard appears in the foreground
+            scoreboardView.setAlwaysOnTop(true); // Temporarily set to always on top
+            scoreboardView.toFront();            // Bring to the front
+            scoreboardView.requestFocus();       // Request focus for input
+
+            // Add a listener to handle when the scoreboard is closed
+            scoreboardView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    gameView.getPauseButton().setEnabled(true); // Re-enable the pause button
+                    SwingUtilities.invokeLater(() -> gameRenderer.requestFocusInWindow()); // Restore game focus
+                }
+            });
+            scoreboardView.setVisible(true);
         });
     }
 
@@ -124,4 +145,14 @@ public class GameController {
         gameView.getPauseButton().setEnabled(true);
         isPaused = false;
     }
+    
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean paused) {
+        isPaused = paused;
+    }
+
+
 }

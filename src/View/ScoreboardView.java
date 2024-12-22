@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.List;
 
 public class ScoreboardView extends JFrame {
-    private JButton returnToMainMenuButton;
+    private JButton closeButton;
 
     public ScoreboardView(List<String> highscores) {
         // Frame setup
@@ -41,16 +41,16 @@ public class ScoreboardView extends JFrame {
         add(scoresArea);
 
         // Return to Main Menu button
-        returnToMainMenuButton = new JButton("Return to Main Menu");
-        returnToMainMenuButton.setFont(new Font("Arial", Font.BOLD, 16));
-        returnToMainMenuButton.setBounds(250, 400, 200, 40);
-        add(returnToMainMenuButton);
+        closeButton = new JButton("Close");
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.setBounds(250, 400, 200, 40);
+        add(closeButton);
 
         // Make the frame visible
         setVisible(true);
     }
 
     public JButton getReturnToMainMenuButton() {
-        return returnToMainMenuButton;
+        return closeButton;
     }
 }

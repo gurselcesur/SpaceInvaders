@@ -12,13 +12,12 @@ import java.awt.event.ActionListener;
 public class ScoreboardController {
     private ScoreboardView scoreboardView;
     private ScoreboardModel scoreboardModel;
-    private GameView gameView;
+    private MainMenu mainMenu;
 
-    public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel, GameView gameView) {
+    // ScoreboardController Constructor for Main Menu
+    public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel, MainMenu mainMenu) {
         this.scoreboardView = scoreboardView;
         this.scoreboardModel = scoreboardModel;
-        this.gameView = gameView;
-
         // Attach action listener to the Return to Main Menu button
         scoreboardView.getReturnToMainMenuButton().addActionListener(new ActionListener() {
             @Override
@@ -28,14 +27,17 @@ public class ScoreboardController {
         });
     }
 
-    public ScoreboardController(ScoreboardView scoreboardView, ScoreboardModel scoreboardModel) {
+    // ScoreboardController Constructor for GameView
+    public ScoreboardController(ScoreboardView scoreboardView,ScoreboardModel scoreboardModel,GameController gameController) {
         this.scoreboardView = scoreboardView;
         this.scoreboardModel = scoreboardModel;
-        // Attach action listener to the Return to Main Menu button
+
+        // Attach action listener to the resume the game
         scoreboardView.getReturnToMainMenuButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                returnToMainMenu();
+                closeScoreboard();
+                gameController.setPaused(false);
             }
         });
     }
@@ -45,12 +47,10 @@ public class ScoreboardController {
      */
     private void returnToMainMenu() {
         new MainMenuController(new MainMenu(), scoreboardModel); // Pass the model to MainMenuController
-        if(gameView.isGameViewOn()){
-            scoreboardView.dispose(); // Close the ScoreboardView
-            gameView.setGameViewOn(false);
-            gameView.dispose();
-        }else{
-            scoreboardView.dispose();
-        }
+        scoreboardView.dispose();
+    }
+
+    private void closeScoreboard() {
+        scoreboardView.dispose();
     }
 }
