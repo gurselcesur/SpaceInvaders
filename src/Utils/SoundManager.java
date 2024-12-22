@@ -143,4 +143,21 @@ public class SoundManager {
             e.printStackTrace();
         }
     }
+
+    public void setVolume(float volume) {
+        if (volumeControl != null) {
+            float min = volumeControl.getMinimum(); // Minimum volume level (e.g., -80.0)
+            float max = volumeControl.getMaximum(); // Maximum volume level (e.g., 6.0)
+
+            // Interpolate the volume value to fit between the minimum and maximum gain
+            float gain = min + (max - min) * volume;
+
+            // Set the volume
+            volumeControl.setValue(gain);
+
+            System.out.println("Volume set to: " + gain + " (" + (volume * 100) + "%)");
+        } else {
+            System.err.println("Volume control is not supported on this system.");
+        }
+    }
 }
