@@ -16,9 +16,10 @@ public class ScoreboardModel {
     }
 
     /**
-     * Load high scores from the file at initialization.
+     * Load high scores from the file.
      */
     private void loadHighscoresFromFile() {
+        highscores.clear(); // Clear existing highscores to prevent duplication
         File file = new File(SCOREBOARD_FILE);
         if (!file.exists()) {
             return; // If file does not exist
@@ -34,7 +35,7 @@ public class ScoreboardModel {
                     highscores.add(new ScoreEntry(playerName, score));
                 }
             }
-            sortHighscores(); // List the uploaded scores
+            sortHighscores(); // Sort the scores after loading
         } catch (IOException e) {
             System.err.println("Failed to load scores from file: " + e.getMessage());
         }
@@ -47,8 +48,8 @@ public class ScoreboardModel {
      */
     public void addHighscore(String playerName, int score) {
         highscores.add(new ScoreEntry(playerName, score));
-        sortHighscores(); // sort the scores from high to low
-        saveHighscoresToFile(); // save updated scores to file
+        sortHighscores(); // Sort the scores from high to low
+        saveHighscoresToFile(); // Save updated scores to file
     }
 
     /**
@@ -67,9 +68,11 @@ public class ScoreboardModel {
 
     /**
      * Get the list of high scores.
+     * Always reload the scores from the file to ensure the latest data is fetched.
      * @return List of high score strings.
      */
     public List<String> getHighscores() {
+        loadHighscoresFromFile(); // Reload the scores from the file
         List<String> highscoreStrings = new ArrayList<>();
         for (ScoreEntry entry : highscores) {
             highscoreStrings.add(entry.getPlayerName() + " - " + entry.getScore());

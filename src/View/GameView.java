@@ -10,6 +10,7 @@ public class GameView extends JFrame {
     private JButton pauseButton; // Button to pause the game
     private JLabel scoreLabel; // Label to display the player's score
     private JLabel healthLabel; // Label to display the player's health
+    private JLabel stageLabel; // Label to display the game stage
     private GameState gameState; // Reference to the game state
     private GameRenderer gameRenderer; // The game renderer
     private MainMenu mainMenu; // Reference to MainMenu
@@ -48,6 +49,10 @@ public class GameView extends JFrame {
         healthLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         healthLabel.setForeground(Color.WHITE);
 
+        stageLabel = new JLabel("Stage = " + gameState.getStageNumber());
+        stageLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        stageLabel.setForeground(Color.WHITE);
+
         pauseButton = new JButton("Pause");
         pauseButton.setFont(new Font("Arial", Font.BOLD, 16));
         pauseButton.setBackground(Color.LIGHT_GRAY);
@@ -70,6 +75,8 @@ public class GameView extends JFrame {
         topPanel.add(scoreLabel);
         topPanel.add(Box.createHorizontalStrut(20)); // Spacer between score and health
         topPanel.add(healthLabel);
+        topPanel.add(Box.createHorizontalStrut(20)); // Spacer between score and health
+        topPanel.add(stageLabel);
         topPanel.add(Box.createHorizontalStrut(20)); // Spacer between health and volume
         topPanel.add(soundLabel);
         topPanel.add(soundControlSlider);
@@ -87,6 +94,7 @@ public class GameView extends JFrame {
         // Start threads to update the score and health dynamically
         startScoreUpdater();
         startHealthUpdater();
+        startStageUpdater();
 
         // Make the frame visible
         setVisible(true);
@@ -125,9 +133,17 @@ public class GameView extends JFrame {
         timer.start();
     }
 
+
+    private void startStageUpdater() {
+        Timer timer = new Timer(100, e -> updateStage()); // Update health every 100 milliseconds
+        timer.start();
+    }
+
     public void updateScore() {
         scoreLabel.setText("Score: " + gameState.getScore());
     }
+
+    public void updateStage(){ stageLabel.setText("Stage: " + gameState.getStageNumber()); }
 
     private void startHealthUpdater() {
         Timer timer = new Timer(100, e -> updateHealth()); // Update health every 100 milliseconds

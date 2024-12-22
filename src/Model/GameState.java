@@ -16,9 +16,9 @@ public class GameState {
     private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
     private Random random = new Random(); // Random instance for enemy shooting
-    private ScoreboardModel scoreboard = new ScoreboardModel() ;
+    private ScoreboardModel scoreboardModel ;
     private SoundManager soundManager = SoundManager.getInstance();
-
+    private int stageNumber = 1; // Stage number of the game
 
     private int shootChance = 5; // Chance for a random enemy to shoot
     private int enemyBulletDamage = 10;
@@ -26,7 +26,8 @@ public class GameState {
     private int colSize = 4;
 
 
-    public GameState(String username, InputHandler inputHandler) {
+    public GameState(String username, InputHandler inputHandler,ScoreboardModel scoreboardModel) {
+        this.scoreboardModel = scoreboardModel;
         player = new Player(username, inputHandler);
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -64,7 +65,7 @@ public class GameState {
 
         // Update player actions
         player.update();
-
+        
         // Handle shooting with cooldown
         long currentTime = System.currentTimeMillis();
         if (player.getInputHandler().shootPressed && currentTime - lastBulletTime >= BULLET_COOLDOWN) {
@@ -82,8 +83,7 @@ public class GameState {
         // Update enemies and their behavior
         updateEnemies();
 
-        // Check if the game is over
-       // checkGameOver();
+        checkGameOver();
     }
 
 
@@ -196,24 +196,27 @@ public class GameState {
      * Checks for game-over conditions.
      */
     private void checkGameOver() {
-        if (player.getHealth() == 0) {
-
+        if (player.getHealth() <= 0) {
             isGameOver = true;
+            soundManager.gameOverSound();
             System.out.println("Game Over! Player health reached 0.");
-
-            // Write player username and score to scoreboard.txt when game is over
-            ScoreboardModel scoreboardModel = new ScoreboardModel();
-            scoreboardModel.writeScoreToFile(player.getUsername(), score);
+            addHighscore(score);
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
             if (rowSize != 5 && colSize != 8){
                 rowSize++;
                 colSize++;
             }
+            stageNumber++;
             shootChance++;
             enemyBulletDamage += 5;
             initializeEnemies(rowSize,colSize);
             System.out.println("New Wave Coming Down!");
         }
+    }
+
+    private void addHighscore(int score) {
+        scoreboardModel.addHighscore(player.getUsername(),score);
+        System.out.println("Score added to scoreboard");
     }
 
     // Getters and Setters
@@ -244,4 +247,6 @@ public class GameState {
     public int getScore() {
         return score;
     }
+
+    public int getStageNumber(){ return stageNumber; }
 }
