@@ -30,7 +30,6 @@ public class ScoreboardView extends JFrame {
         JTextArea scoresArea = new JTextArea();
         scoresArea.setEditable(false);
         scoresArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        scoresArea.setBounds(150, 80, 400, 300);
 
         // Populate scores
         StringBuilder scoresText = new StringBuilder();
@@ -38,7 +37,11 @@ public class ScoreboardView extends JFrame {
             scoresText.append(score).append("\n");
         }
         scoresArea.setText(scoresText.toString());
-        add(scoresArea);
+
+        // Wrap the JTextArea with a JScrollPane
+        JScrollPane scrollPane = new JScrollPane(scoresArea);
+        scrollPane.setBounds(150, 80, 400, 300); // Set the size and position
+        add(scrollPane);
 
         // Return to Main Menu button
         closeButton = new JButton("Close");

@@ -3,19 +3,7 @@ Sarah - 4500
 Alice - 4000
 Bob - 3000
 John - 2500
-dahak - 1230
-estelantis - 1210
-123 - 1060
-123 - 1060
+Dahak - 1230
+Estelantis - 1210
 elf - 320
-elo tabo - 310
-123 - 260
-123 - 260
-elif tabak - 240
-elf - 240
-1 - 90
-1 - 90
-1 - 0
-1 - 0
-1234 - 0
-1234 - 0
+bum - 90
