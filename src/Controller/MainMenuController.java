@@ -2,7 +2,6 @@ package Controller;
 
 import Model.GameState;
 import Model.ScoreboardModel;
-import Utils.SoundManager;
 import View.GameRenderer;
 import View.GameView;
 import View.MainMenu;
@@ -49,7 +48,6 @@ public class MainMenuController {
                 raiseSound();
             }
         });
-
 
     }
 

@@ -71,7 +71,11 @@ public class GameController {
                 resumeGame();
             });
 
-
+            // Show Scoreboard when Show Scoreboard button is clicked
+            pauseScreen.getShowScoreboardButton().addActionListener(e -> {
+                pauseScreen.dispose();
+                //showScoreboard();
+            });
 
             // Return to Main Menu when Main Menu button is clicked
             pauseScreen.getMainMenuButton().addActionListener(e -> {
@@ -88,10 +92,16 @@ public class GameController {
     }
 
     /**
+     * Show the scoreboard.
+     */
+
+
+    /**
      * Resume the game by closing the pause screen and continuing the game loop.
      */
     private void resumeGame() {
         gameView.getPauseButton().setEnabled(true);
         isPaused = false;
     }
+
 }
