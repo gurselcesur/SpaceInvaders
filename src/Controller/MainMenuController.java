@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 
 public class MainMenuController {
     private MainMenu mainMenu;
-    private ScoreboardModel scoreboardModel; // Reference to the ScoreboardModel
+    public ScoreboardModel scoreboardModel; // Reference to the ScoreboardModel
     private GameState gameState;
 
     public MainMenuController(MainMenu mainMenu, ScoreboardModel scoreboardModel) {
@@ -84,5 +84,9 @@ public class MainMenuController {
     // Handle the Higher Sound button click event.
     private void raiseSound() {
         mainMenu.getSoundManager().increaseVolume();
+    }
+
+    public ScoreboardModel getScoreboardModel() {
+        return scoreboardModel;
     }
 }

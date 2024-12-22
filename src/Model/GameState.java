@@ -1,9 +1,12 @@
 package Model;
 
 import Controller.InputHandler;
+import Controller.MainMenuController;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class GameState {
     private Player player;               // Player instance
@@ -13,6 +16,14 @@ public class GameState {
     private int score;                   // Player's score
     private long lastBulletTime = 0;     // Tracks the time the last bullet was fired
     private static final int BULLET_COOLDOWN = 300; // Cooldown in milliseconds
+    private Random random = new Random(); // Random instance for enemy shooting
+    private ScoreboardModel scoreboard = new ScoreboardModel() ;
+
+    private int shootChance = 5; // Chance for a random enemy to shoot
+    private int enemyBulletDamage = 10;
+    private int rowSize = 3;
+    private int colSize = 4;
+
 
     public GameState(String username, InputHandler inputHandler) {
         player = new Player(username, inputHandler);
@@ -20,22 +31,22 @@ public class GameState {
         bullets = new ArrayList<>();
         isGameOver = false;
         score = 0;
-        initializeEnemies();
+        initializeEnemies(rowSize,colSize);
     }
 
     /**
+     * rowSize: Number of rows of enemies
+     * colSize: Number of enemies per row
      * Initializes enemies at the start of the game.
      */
-    private void initializeEnemies() {
-        int enemyWidth = 40;  // Example width of each enemy
-        int enemyHeight = 30; // Example height of each enemy
-        int rows = 4;         // Number of rows of enemies
-        int cols = 6;         // Number of enemies per row
-        int spacingX = 20;    // Horizontal spacing
-        int spacingY = 15;    // Vertical spacing
+    private void initializeEnemies(int rowSize, int colSize) {
+        int enemyWidth = 32;  // Example width of each enemy
+        int enemyHeight = 32; // Example height of each enemy
+        int spacingX = 32;    // Horizontal spacing
+        int spacingY = 16;    // Vertical spacing
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < rowSize; row++) {
+            for (int col = 0; col < colSize; col++) {
                 int x = 50 + col * (enemyWidth + spacingX);
                 int y = 50 + row * (enemyHeight + spacingY);
                 enemies.add(new Enemy(x, y, enemyWidth, enemyHeight, 2)); // Pass all required arguments
@@ -59,6 +70,10 @@ public class GameState {
             bullets.add(player.shootBullet());
             lastBulletTime = currentTime; // Update the last bullet time
         }
+
+        //Handle enemy shooting
+        handleEnemyShooting();
+
 
         // Update bullets and handle collisions
         updateBullets();
@@ -90,10 +105,41 @@ public class GameState {
             if (bullet.isPlayerBullet()) {
                 handleBulletEnemyCollisions(bulletIterator, bullet);
             }
+            // Check for collisions with player
+            else if (!bullet.isPlayerBullet() && player.collidesWithBullet(bullet)) {
+                player.takeDamage(enemyBulletDamage);
+                bulletIterator.remove(); // Remove the bullet after collision
+                System.out.println("Player hit! Remaining health: " + player.getHealth());
+
+                checkGameOver();
+            }
+        }
+    }
+    /**
+     * Handles random enemy shooting with a chance.
+     */
+    private void handleEnemyShooting() {
+
+        if (random.nextInt(100) < shootChance) {
+            Enemy shooter = getRandomAliveEnemy();
+            if (shooter != null) {
+                bullets.add(shooter.shootBullet());
+                System.out.println("Enemy shot a bullet from position (" + shooter.getX() + ", " + shooter.getY() + ")");
+            }
         }
     }
 
-
+    /**
+     * Gets a random alive enemy.
+     * @return a random alive enemy, or null if no enemies are alive
+     */
+    private Enemy getRandomAliveEnemy() {
+        List<Enemy> aliveEnemies = enemies.stream().filter(Enemy::isAlive).toList();
+        if (!aliveEnemies.isEmpty()) {
+            return aliveEnemies.get(random.nextInt(aliveEnemies.size()));
+        }
+        return null;
+    }
 
     /**
      * Handles collisions between player bullets and enemies.
@@ -101,7 +147,7 @@ public class GameState {
     private void handleBulletEnemyCollisions(Iterator<Bullet> bulletIterator, Bullet bullet) {
         for (Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
             Enemy enemy = enemyIterator.next();
-            if (enemy.isAlive() && bullet.collidesWith(enemy)) {
+            if (enemy.isAlive() && bullet.collidesWithEnemy(enemy)) {
                 enemy.takeDamage(); // Reduce enemy health
                 bulletIterator.remove(); // Remove the bullet
                 score += 10; // Increment score for destroying an enemy
@@ -112,6 +158,27 @@ public class GameState {
                     System.out.println("Enemy destroyed! Score: " + score);
                 }
                 break; // Exit after handling collision
+            }
+        }
+    }
+
+    /**
+     * Handles collisions between bullets and the player.
+     */
+    private void handleBulletPlayerCollisions() {
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+
+            // Check if the bullet is an enemy bullet and collides with the player
+            if (!bullet.isPlayerBullet() && player.collidesWithBullet(bullet)) {
+                player.takeDamage(enemyBulletDamage); // Reduce player's health by bullet damage
+                bulletIterator.remove(); // Remove the bullet after collision
+
+                System.out.println("Player hit! Remaining health: " + player.getHealth());
+
+                checkGameOver();
             }
         }
     }
@@ -133,7 +200,6 @@ public class GameState {
         }
     }
 
-
     /**
      * Updates enemies' positions and interactions.
      */
@@ -152,10 +218,17 @@ public class GameState {
     private void checkGameOver() {
         if (player.getHealth() <= 0) {
             isGameOver = true;
+            scoreboard.addHighscore(player.getUsername(),player.getHealth());
             System.out.println("Game Over! Player health reached 0.");
         } else if (enemies.stream().noneMatch(Enemy::isAlive)) {
-            isGameOver = true;
-            System.out.println("Game Over! You win!");
+            if (rowSize != 5 && colSize != 8){
+                rowSize++;
+                colSize++;
+            }
+            shootChance++;
+            enemyBulletDamage += 5;
+            initializeEnemies(rowSize,colSize);
+            System.out.println("New Wave Coming Down!");
         }
     }
 

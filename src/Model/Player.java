@@ -42,8 +42,8 @@ public class Player extends EntityBase {
         this.inputH = inputH;
         setDefaultValues(); // Set initial player attribute values
         loadSprites();      // Load player sprites for animations
-        x = 352;
-        y = 350;
+        x = 350;
+        y = 450;
         width = 48;
         height = 48;
         soundManager = SoundManager.getInstance();
@@ -160,7 +160,7 @@ public class Player extends EntityBase {
         int bulletX = x + 48 / 2 - 2; // Center bullet on the player
         int bulletY = y - 10; // Start just above the player
         soundManager.playShootSound();
-        return new Bullet(bulletX, bulletY, 5, 15, true); // Player bullet with speed 10
+        return new Bullet(bulletX, bulletY, 5, 15, true);
     }
 
     public boolean collidesWith(Enemy enemy) {
@@ -168,6 +168,17 @@ public class Player extends EntityBase {
                 x + width > enemy.getX() &&
                 y < enemy.getY() + enemy.getHeight() &&
                 y + height > enemy.getY();
+    }
+
+    public boolean collidesWithBullet(Bullet bullet) {
+        return x < bullet.getX() + bullet.getWidth() &&
+                x + width > bullet.getX() &&
+                y < bullet.getY() + bullet.getHeight() &&
+                y + height > bullet.getY();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 }
