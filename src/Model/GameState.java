@@ -65,7 +65,7 @@ public class GameState {
 
         // Update player actions
         player.update();
-        
+
         // Handle shooting with cooldown
         long currentTime = System.currentTimeMillis();
         if (player.getInputHandler().shootPressed && currentTime - lastBulletTime >= BULLET_COOLDOWN) {
@@ -112,7 +112,7 @@ public class GameState {
                 bulletIterator.remove(); // Remove the bullet after collision
                 System.out.println("Player hit! Remaining health: " + player.getHealth());
 
-                checkGameOver();
+                //checkGameOver();
             }
         }
     }
@@ -171,11 +171,11 @@ public class GameState {
                 enemy.takeDamage(); // Reduce enemy health
                 score += 10; // Increment score for destroying an enemy
                 player.takeDamage(10);
-                    if (!enemy.isAlive()) {
-                        enemyIterator.remove();
-                        System.out.println("Enemy destroyed at position (" + enemy.getX() + ", " + enemy.getY() + ")");
-                    }
-                    break; // Exit after handling collision
+                if (!enemy.isAlive()) {
+                    enemyIterator.remove();
+                    System.out.println("Enemy destroyed at position (" + enemy.getX() + ", " + enemy.getY() + ")");
+                }
+                break; // Exit after handling collision
             }
         }
     }
@@ -247,6 +247,5 @@ public class GameState {
     public int getScore() {
         return score;
     }
-
     public int getStageNumber(){ return stageNumber; }
 }

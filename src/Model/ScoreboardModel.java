@@ -107,42 +107,48 @@ public class ScoreboardModel {
     }
 
     /**
-     * Write player's username and score to the scoreboard file.
+     * This method writes a new score to the scoreboard file. It reads the existing scores from a file, adds the new score,
+     * sorts the scores in descending order, and then writes the sorted scores back to the file.
+     *
+     * @param username The username of the player.
+     * @param score The score achieved by the player.
      */
     public void writeScoreToFile(String username, int score) {
+        // Create a list to store the current scores
         List<String> scoreList = new ArrayList<>();
 
-        // Mevcut scoreboard.txt dosyasını oku
+        // Read the existing scoreboard.txt file
         try (BufferedReader reader = new BufferedReader(new FileReader("resources/scoreboard.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                scoreList.add(line);  // Dosyadaki her satırı listeye ekle
+                scoreList.add(line);  // Add each line from the file to the list
             }
         } catch (IOException e) {
             System.out.println("An error occurred while reading the scoreboard file: " + e.getMessage());
         }
 
-        // Yeni skoru listeye ekle
+        // Add the new score to the list
         scoreList.add(username + " - " + score);
 
-        // Listeyi skorlara göre büyükten küçüğe sırala
+        // Sort the list in descending order based on the score
         scoreList.sort((entry1, entry2) -> {
-            // Skorları ayıklayıp karşılaştırıyoruz
+            // Extract the scores and compare them
             int score1 = Integer.parseInt(entry1.split(" - ")[1]);
             int score2 = Integer.parseInt(entry2.split(" - ")[1]);
-            return Integer.compare(score2, score1);  // Büyükten küçüğe sıralama
+            return Integer.compare(score2, score1);  // Sorting in descending order
         });
 
-        // Sıralı listeyi dosyaya yaz
+        // Write the sorted list of scores back to the file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("resources/scoreboard.txt"))) {
             for (String entry : scoreList) {
-                writer.write(entry);
-                writer.newLine();  // Yeni satır ekle
+                writer.write(entry);  // Write each score entry to the file
+                writer.newLine();  // Add a new line after each score
             }
             System.out.println("Score written to scoreboard.txt: " + username + " - " + score);
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the scoreboard file: " + e.getMessage());
         }
     }
+
 
 }
